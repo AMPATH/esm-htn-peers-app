@@ -37,7 +37,7 @@ jobs:
     env:
       DIR_NAME: "esm-htn-peers-app"
       ESM_NAME: "@ampath/esm-htn-peers"
-      JS_NAME: "ampth-esm-htn-peers-app.js"
+      JS_NAME: "ampath-esm-htn-peers-app.js"
 
     needs: build
 
