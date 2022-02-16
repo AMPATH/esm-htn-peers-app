@@ -1,6 +1,5 @@
 import { navigate } from '@openmrs/esm-framework';
 
-
 export function scrollIntoView(viewId: string) {
   document.getElementById(viewId).scrollIntoView({
     behavior: 'smooth',

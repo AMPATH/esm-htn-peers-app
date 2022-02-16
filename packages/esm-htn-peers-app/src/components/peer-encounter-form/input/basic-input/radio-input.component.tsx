@@ -4,8 +4,8 @@ import { useField } from 'formik';
 
 interface RadioInputProps {
   id: string;
-  legendText: string
-  defaultSelected?: string
+  legendText: string;
+  defaultSelected?: string;
   name: string;
   options: Array<any>;
 }
@@ -13,14 +13,14 @@ interface RadioInputProps {
 export const Radio: React.FC<RadioInputProps> = ({ id, name, options, legendText }) => {
   const [field, meta] = useField(name);
   const inputOptions = [
-    ...options.map((currentOption, index) => <RadioButton labelText={currentOption.label} value={currentOption.concept} id={id+'-'+index} />),
+    ...options.map((currentOption, index) => (
+      <RadioButton labelText={currentOption.label} value={currentOption.concept} id={id + '-' + index} />
+    )),
   ];
 
   return (
     <div style={{ marginBottom: '1rem' }}>
-      <RadioButtonGroup  {...field}
-      legendText={legendText}
-      name={name}>
+      <RadioButtonGroup {...field} legendText={legendText} name={name}>
         {inputOptions}
       </RadioButtonGroup>
     </div>

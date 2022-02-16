@@ -1,4 +1,9 @@
-import { defineConfigSchema, getAsyncLifecycle, getSyncLifecycle, messageOmrsServiceWorker } from '@openmrs/esm-framework';
+import {
+  defineConfigSchema,
+  getAsyncLifecycle,
+  getSyncLifecycle,
+  messageOmrsServiceWorker,
+} from '@openmrs/esm-framework';
 import { createDashboardLink } from './createDashboardLink';
 import { dashboardMeta } from './dashboard.meta';
 import { config } from './config';
@@ -47,7 +52,7 @@ function setupOpenMRS() {
         load: getAsyncLifecycle(() => import('./peers-home/peers-home.component'), options),
         online: true,
         offline: true,
-        order: 1
+        order: 1,
       },
       {
         id: 'htn-peers-nav-link',
@@ -56,7 +61,7 @@ function setupOpenMRS() {
         meta: dashboardMeta,
         online: true,
         offline: true,
-      }
+      },
     ],
   };
 }

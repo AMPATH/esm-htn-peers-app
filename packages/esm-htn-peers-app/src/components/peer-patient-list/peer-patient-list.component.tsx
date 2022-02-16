@@ -1,22 +1,36 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { DataTable, DataTableSkeleton, Table, TableBody, TableCell, TableContainer, TableExpandHeader, TableExpandRow, TableHead, TableHeader, TableRow, TableToolbar, TableToolbarContent, Tile } from 'carbon-components-react';
+import {
+  DataTable,
+  DataTableSkeleton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableExpandHeader,
+  TableExpandRow,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableToolbar,
+  TableToolbarContent,
+  Tile,
+} from 'carbon-components-react';
 import { useTranslation } from 'react-i18next';
 import { ConfigurableLink, useConfig, useLayoutType, useSessionUser } from '@openmrs/esm-framework';
 
-
 import { useRelationships } from './relationships.resource';
-import { EmptyIllustration } from '../../ui-components/empty-illustration.component'
+import { EmptyIllustration } from '../../ui-components/empty-illustration.component';
 import styles from './peer-patient-list.scss';
 
 interface peerPatientRow {
-    id: string,
-    idNumber: string,
-    location: string,
-    name: string,
-    patientUuid: string,
-    phone: string,
-    drugDeliveryDate: string
-};
+  id: string;
+  idNumber: string;
+  location: string;
+  name: string;
+  patientUuid: string;
+  phone: string;
+  drugDeliveryDate: string;
+}
 
 const PeerPatientList: React.FC<{}> = () => {
   const { t } = useTranslation();
@@ -31,7 +45,7 @@ const PeerPatientList: React.FC<{}> = () => {
     if (sessionUser) {
       setUser(sessionUser);
     }
-  }, [sessionUser])
+  }, [sessionUser]);
 
   const { data: relationships, isLoading } = useRelationships(user?.user?.person?.uuid);
 
@@ -56,7 +70,7 @@ const PeerPatientList: React.FC<{}> = () => {
         id: 3,
         header: t('drugDeliveryDate', 'Drug Delivery Date'),
         key: 'drugDeliveryDate',
-      }
+      },
     ],
     [t],
   );
@@ -67,54 +81,57 @@ const PeerPatientList: React.FC<{}> = () => {
 
   if (relationships?.length) {
     return (
-    <div className={styles.peerPatientsContainer}>
-    <div className={styles.peerPatientsDetailHeaderContainer}>
-      <h4 className={styles.productiveHeading02}>{t('peerPatients', 'Peer Patients')}</h4>
-    </div>
-    <DataTable rows={relationships} headers={headerData} isSortable>
-      {({ rows, headers, getHeaderProps, getTableProps, getBatchActionProps, getRowProps }) => (
-        <TableContainer title="" className={styles.tableContainer}>
-          <Table className={styles.peerPatientsTable} {...getTableProps()} size={desktopView ? 'short' : 'normal'}>
-            <TableHead>
-              <TableRow>
-                <TableExpandHeader />
-                {headers.map((header) => (
-                  <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row, index) => (
-                <React.Fragment key={index}>
-                  <TableExpandRow {...getRowProps({ row })}>
-                    {row.cells.map((cell) => (
-                      <TableCell key={cell.id}>
-                        {cell.info.header === 'name' ? (
-                          <ConfigurableLink
-                            to={`\${openmrsSpaBase}/patient/${relationships?.[index]?.relativeUuid}/chart/`}>
-                            {cell.value}
-                          </ConfigurableLink>
-                        ) : (
-                          cell.value + "--" + cell.info.header
-                        )}
-                      </TableCell>
+      <div className={styles.peerPatientsContainer}>
+        <div className={styles.peerPatientsDetailHeaderContainer}>
+          <h4 className={styles.productiveHeading02}>{t('peerPatients', 'Peer Patients')}</h4>
+        </div>
+        <DataTable rows={relationships} headers={headerData} isSortable>
+          {({ rows, headers, getHeaderProps, getTableProps, getBatchActionProps, getRowProps }) => (
+            <TableContainer title="" className={styles.tableContainer}>
+              <Table className={styles.peerPatientsTable} {...getTableProps()} size={desktopView ? 'short' : 'normal'}>
+                <TableHead>
+                  <TableRow>
+                    <TableExpandHeader />
+                    {headers.map((header) => (
+                      <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>
                     ))}
-                  </TableExpandRow>
-                </React.Fragment>
-              ))}
-            </TableBody>
-          </Table>
-          {rows.length === 0 && (
-            <p
-              style={{ height: desktopView ? '2rem' : '3rem', marginLeft: desktopView ? '2rem' : '3rem' }}
-              className={`${styles.emptyRow} ${styles.bodyLong01}`}>
-              {t('noPatientsFound', 'No patients found')}
-            </p>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {rows.map((row, index) => (
+                    <React.Fragment key={index}>
+                      <TableExpandRow {...getRowProps({ row })}>
+                        {row.cells.map((cell) => (
+                          <TableCell key={cell.id}>
+                            {cell.info.header === 'name' ? (
+                              <ConfigurableLink
+                                to={`\${openmrsSpaBase}/patient/${relationships?.[index]?.relativeUuid}/chart/`}
+                              >
+                                {cell.value}
+                              </ConfigurableLink>
+                            ) : (
+                              cell.value + '--' + cell.info.header
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableExpandRow>
+                    </React.Fragment>
+                  ))}
+                </TableBody>
+              </Table>
+              {rows.length === 0 && (
+                <p
+                  style={{ height: desktopView ? '2rem' : '3rem', marginLeft: desktopView ? '2rem' : '3rem' }}
+                  className={`${styles.emptyRow} ${styles.bodyLong01}`}
+                >
+                  {t('noPatientsFound', 'No patients found')}
+                </p>
+              )}
+            </TableContainer>
           )}
-        </TableContainer>
-      )}
-    </DataTable>
-  </div>)
+        </DataTable>
+      </div>
+    );
   }
 
   return (
@@ -124,13 +141,10 @@ const PeerPatientList: React.FC<{}> = () => {
           <h4>{t('peerPatients', 'Peer Patients')}</h4>
         </div>
         <EmptyIllustration />
-        <p className={styles.content}>
-          {t('noPeerPatients', 'You have not been assigned any peer patients.')}
-        </p>
+        <p className={styles.content}>{t('noPeerPatients', 'You have not been assigned any peer patients.')}</p>
       </Tile>
     </div>
   );
-
 };
 
 export default PeerPatientList;

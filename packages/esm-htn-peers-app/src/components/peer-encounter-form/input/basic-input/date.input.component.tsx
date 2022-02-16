@@ -13,15 +13,11 @@ interface DateProps {
 
 export const Date: React.FC<DateProps> = ({ ...props }) => {
   const [field, meta] = useField(props.name);
-  const value = field.value
+  const value = field.value;
   return (
     <div style={{ marginBottom: '1rem' }}>
       <DatePicker datePickerType="single">
-        <DatePickerInput 
-          {...props}
-          value={value}
-          placeholder="mm/dd/yyyy"
-        />
+        <DatePickerInput {...props} value={value} placeholder="mm/dd/yyyy" />
       </DatePicker>
     </div>
   );

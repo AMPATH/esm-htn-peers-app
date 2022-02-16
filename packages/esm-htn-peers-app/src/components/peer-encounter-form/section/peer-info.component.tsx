@@ -1,12 +1,11 @@
 import React from 'react';
 
-
 import { getField } from './section-helper';
-import styles from './section.scss'
+import styles from './section.scss';
 
 export interface PeerInfoSectionProps {
   id: string;
-  name: string,
+  name: string;
   fields: Array<any>;
 }
 

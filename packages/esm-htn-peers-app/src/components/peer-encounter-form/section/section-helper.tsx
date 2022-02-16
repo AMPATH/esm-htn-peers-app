@@ -14,16 +14,15 @@ export function getField(field: any) {
     case 'text':
       return <Text id={field.id} name={field.id} labelText={field.label} light />;
     case 'select':
-      return <SelectInput id={field.id} name={field.id} label={field.label} 
-      options={field.questionOptions.answers} />;
+      return <SelectInput id={field.id} name={field.id} label={field.label} options={field.questionOptions.answers} />;
     case 'radio':
-      return <Radio id={field.id} name={field.id} legendText={field.label} 
-      options={field.questionOptions.answers} />;
+      return <Radio id={field.id} name={field.id} legendText={field.label} options={field.questionOptions.answers} />;
     case 'checkbox':
-      return <CheckboxInput id={field.id} name={field.id} legendText={field.label} 
-      options={field.questionOptions.answers} />;
+      return (
+        <CheckboxInput id={field.id} name={field.id} legendText={field.label} options={field.questionOptions.answers} />
+      );
     case 'date':
-      return <Date id={field.id} name={field.id} labelText={field.label}/>;
+      return <Date id={field.id} name={field.id} labelText={field.label} />;
     default:
       return <div>Unknown Field {field.label} </div>;
   }
@@ -41,14 +40,14 @@ function renderSection(sectionProps: SectionProps) {
 }
 
 export interface DefaultSectionProps {
-  id: 'default',
-  name: string,
-  fields: Array<any>
+  id: 'default';
+  name: string;
+  fields: Array<any>;
 }
 
 export type SectionProps = DefaultSectionProps | PeerInfoSectionProps | PatientInfoSectionProps;
 
-export function getSection(sectionProps: SectionProps & {name:string}, index: number) {
+export function getSection(sectionProps: SectionProps & { name: string }, index: number) {
   return (
     <SectionWrapper {...sectionProps} index={index}>
       {renderSection(sectionProps)}

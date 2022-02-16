@@ -76,7 +76,8 @@ export const Autosuggest: React.FC<AutosuggestProps> = ({
           {suggestions.map((suggestion, index) => (
             <li //eslint-disable-line jsx-a11y/no-noninteractive-element-interactions
               key={index}
-              onClick={(e) => handleClick(index)}>
+              onClick={(e) => handleClick(index)}
+            >
               {getDisplayValue(suggestion)}
             </li>
           ))}
