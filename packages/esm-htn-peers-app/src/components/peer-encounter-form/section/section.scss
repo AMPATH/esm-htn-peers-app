@@ -1,0 +1,10 @@
+.formSection {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    div {
+      flex-basis: 32%;
+    }
+  }
+  
+  

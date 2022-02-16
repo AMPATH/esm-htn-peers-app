@@ -1,11 +1,12 @@
 {
-  "name": "@openmrs/esm-patient-chart",
+  "name": "@ampath/esm-htn-peers",
   "private": true,
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
-    "start": "openmrs develop --sources packages/esm-patient-chart-app/",
+    "start": "openmrs develop --sources packages/esm-htn-peers-app/",
+    "start:kibana": "openmrs develop --backend=https://kibana.ampath.or.ke/ --api-url=/amrs/ --sources packages/esm-htn-peers-app/ --importmap=https://poc-test-builds.fra1.digitaloceanspaces.com/@importmap/import-map.json",
     "start-all": "openmrs develop --sources 'packages/esm-*-app/'",
     "ci:publish": "lerna publish from-package --yes",
     "ci:prepublish": "lerna publish from-package --no-git-reset --yes --dist-tag next",
@@ -14,6 +15,7 @@
     "verify": "lerna run lint && lerna run test && lerna run typescript",
     "prettier": "prettier --config prettier.config.js --write \"packages/**/*.{ts,tsx}\"",
     "prepare": "husky install",
+    "build": "webpack --mode production",
     "test": "jest --config jest.config.json --verbose false --passWithNoTests",
     "test-watch": "jest --watch --config jest.config.json",
     "coverage": "yarn test --coverage",
@@ -26,7 +28,7 @@
     "@babel/preset-react": "^7.10.4",
     "@babel/preset-typescript": "^7.10.4",
     "@babel/runtime": "^7.12.13",
-    "@openmrs/esm-framework": "next",
+    "@openmrs/esm-framework": "^3.1.14",
     "@testing-library/dom": "^7.20.0",
     "@testing-library/jest-dom": "^5.11.0",
     "@testing-library/react": "^10.4.3",
@@ -73,6 +75,7 @@
     "webpack-cli": "^4.7.0"
   },
   "dependencies": {
-    "swr": "^1.0.1"
+    "formik": "^2.2.9",
+    "swr": "^1.1.2"
   }
 }
