@@ -19,6 +19,7 @@ const frontendDependencies = {
 };
 
 function setupOpenMRS() {
+  console.log("HTN runnng");
   messageOmrsServiceWorker({
     type: 'registerDynamicRoute',
     pattern: '.+/ws/rest/v1/relationship.+',
@@ -36,7 +37,7 @@ function setupOpenMRS() {
   return {
     pages: [
       {
-        route: /htn-peers/,
+        route: 'app',
         load: getAsyncLifecycle(() => import('./components/peer-patient-list/peer-patient-list.component'), {
           featureName: 'htn-peers',
           moduleName,
