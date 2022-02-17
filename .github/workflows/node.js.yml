@@ -20,9 +20,6 @@ jobs:
         with:
           node-version: "14.x"
       - run: npx lerna bootstrap
-      - run: npx lerna run lint
-      - run: npx lerna run typescript
-      - run: npm run test
       - run: npx lerna run build
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
