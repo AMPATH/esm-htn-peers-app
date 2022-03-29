@@ -2,10 +2,12 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   DataTable,
   DataTableSkeleton,
+  InlineLoading,
   Table,
   TableBody,
   TableCell,
   TableContainer,
+  TableExpandedRow,
   TableExpandHeader,
   TableExpandRow,
   TableHead,
@@ -16,11 +18,14 @@ import {
   Tile,
 } from 'carbon-components-react';
 import { useTranslation } from 'react-i18next';
-import { ConfigurableLink, useConfig, useLayoutType, useSessionUser } from '@openmrs/esm-framework';
+import { ConfigurableLink, fetchCurrentPatient, formatDate, useConfig, useLayoutType, useSessionUser } from '@openmrs/esm-framework';
 
 import { useRelationships } from './relationships.resource';
 import { EmptyIllustration } from '../../ui-components/empty-illustration.component';
 import styles from './peer-patient-list.scss';
+import { mapPatienInfo, mergePatienInfo } from '../../services/patient.service';
+import PatientInfoSummary from './patient-info-summary';
+import { getPatientEncounter, getPatientInfo, getPatientOrders } from '../../api/patient-resource';
 
 interface peerPatientRow {
   id: string;
@@ -37,9 +42,13 @@ const PeerPatientList: React.FC<{}> = () => {
   const config = useConfig();
   const layout = useLayoutType();
   const desktopView = layout === 'desktop';
+  const isTablet = layout === 'tablet';
 
   const sessionUser = useSessionUser();
   const [user, setUser] = useState(null);
+  const [patientData, setPatientData] = useState(null);
+  const [ordersLoading, setOrdersLoading] = useState(true);
+  const [patientOrders, setPatientOrders] = useState(null);
 
   useEffect(() => {
     if (sessionUser) {
@@ -49,6 +58,40 @@ const PeerPatientList: React.FC<{}> = () => {
 
   const { data: relationships, isLoading } = useRelationships(user?.user?.person?.uuid);
 
+  const reflect = (promise) => {
+    return promise.then((v) => v.data.results, (e) => e);
+  };
+
+  useMemo(() => {
+    const abortController = new AbortController();
+    
+    if(relationships && !patientData) {
+      const patientUuids = [];
+      relationships.forEach((patient) => {
+        patientUuids.push(patient.relativeUuid);
+      });
+      
+      const patientInfoRequest = getPatientInfo(patientUuids, abortController);
+      const patientOrdersRequest = getPatientOrders(patientUuids, abortController, 'ACTIVE');
+      const patientEncounterRequest = getPatientEncounter(patientUuids, 'BIGPICTELECARE', abortController);
+  
+      Promise.all(patientInfoRequest).then((patientInfo) => {
+        const mappedInfo = mapPatienInfo(patientInfo);
+        setPatientData(mappedInfo);
+        return mappedInfo;
+      }).then((mappedInfo) => {
+        // not the best way to handle this but can suffice for now
+        Promise.all(patientOrdersRequest.concat(patientEncounterRequest)).then((encounterDrugOrders) => {
+          const mergedInfo = mergePatienInfo(mappedInfo, encounterDrugOrders);
+          setPatientData(mergedInfo);
+          setPatientOrders(mergedInfo);
+          setOrdersLoading(false);
+        });
+      });
+    }
+
+  }, [relationships, patientData]);
+  console.log(patientData);
   const headerData = useMemo(
     () => [
       {
@@ -68,9 +111,9 @@ const PeerPatientList: React.FC<{}> = () => {
       },
       {
         id: 3,
-        header: t('drugDeliveryDate', 'Drug Delivery Date'),
-        key: 'drugDeliveryDate',
-      },
+        header: t('rtcDate', 'Next Visit Date'),
+        key: 'rtcDate',
+      }
     ],
     [t],
   );
@@ -79,13 +122,13 @@ const PeerPatientList: React.FC<{}> = () => {
     return <DataTableSkeleton role="progressbar" />;
   }
 
-  if (relationships?.length) {
+  if (patientData?.length) {
     return (
       <div className={styles.peerPatientsContainer}>
         <div className={styles.peerPatientsDetailHeaderContainer}>
           <h4 className={styles.productiveHeading02}>{t('peerPatients', 'Peer Patients')}</h4>
         </div>
-        <DataTable rows={relationships} headers={headerData} isSortable>
+        <DataTable rows={patientData} headers={headerData} isSortable>
           {({ rows, headers, getHeaderProps, getTableProps, getBatchActionProps, getRowProps }) => (
             <TableContainer title="" className={styles.tableContainer}>
               <Table className={styles.peerPatientsTable} {...getTableProps()} size={desktopView ? 'short' : 'normal'}>
@@ -105,16 +148,31 @@ const PeerPatientList: React.FC<{}> = () => {
                           <TableCell key={cell.id}>
                             {cell.info.header === 'name' ? (
                               <ConfigurableLink
-                                to={`\${openmrsSpaBase}/patient/${relationships?.[index]?.relativeUuid}/chart/`}
+                                to={`\${openmrsSpaBase}/patient/${patientData?.[index]?.uuid}/chart/`}
                               >
                                 {cell.value}
                               </ConfigurableLink>
-                            ) : (
-                              cell.value + '--' + cell.info.header
-                            )}
+                            ) : (cell.value)}
+                            {cell.info.header === 'rtcDate' ? (
+                              formatDate(new Date(patientData?.[index]?.encounter?.return_visit_date[0]?.value))
+                            ) : (null)}
                           </TableCell>
                         ))}
                       </TableExpandRow>
+                      {row.isExpanded ? (
+                          <TableExpandedRow className={styles.expandedRow} style={{ paddingLeft: isTablet ? '4rem' : '3rem' }} colSpan={headers.length + 2}
+                          >
+                            {
+                              ordersLoading? (
+                                <span>
+                                  <InlineLoading />
+                                </span>
+                              ) : (
+                                <PatientInfoSummary patientInfo={patientOrders?.[index].orders} />
+                                )
+                            }
+                          </TableExpandedRow>
+                        ) : (null)}
                     </React.Fragment>
                   ))}
                 </TableBody>
@@ -146,5 +204,6 @@ const PeerPatientList: React.FC<{}> = () => {
     </div>
   );
 };
+
 
 export default PeerPatientList;

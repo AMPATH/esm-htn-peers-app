@@ -1,12 +1,14 @@
 import {
   defineConfigSchema,
   getAsyncLifecycle,
-  getSyncLifecycle,
+  getSyncLifecycle, 
   messageOmrsServiceWorker,
 } from '@openmrs/esm-framework';
-import { createDashboardLink } from './createDashboardLink';
-import { dashboardMeta } from './dashboard.meta';
+
+import { createFormDashboardLink } from './createFormDashboardLink';
+import { formDashboardMeta, peersDashboardMeta } from './dashboard.meta';
 import { config } from './config';
+import { createPeerDashboardLink } from './createPeerDashboardLink';
 
 const importTranslation = require.context('../translations', false, /.json$/, 'lazy');
 
@@ -48,28 +50,29 @@ function setupOpenMRS() {
     ],
     extensions: [
       {
-        id: 'htn-peers',
+        id: 'peer-list',
         slot: 'patient-chart-htn-peers-dashboard-slot',
         load: getAsyncLifecycle(() => import('./peers-home/peers-home.component'), options),
+        meta: peersDashboardMeta,
         online: true,
-        offline: true,
-        order: 1,
+        offline: false,
       },
       {
-        id: 'htn-peer-encounter-form',
-        load: getAsyncLifecycle(() => import('./components/peer-encounter-form/peer-encounter-form.component'), options),
+        id: 'peer-list-nav-link',
+        slot: 'patient-chart-dashboard-slot',
+        load: getSyncLifecycle(createPeerDashboardLink(peersDashboardMeta), options),
+        meta: peersDashboardMeta,
         online: true,
         offline: true,
-        order: 1,
       },
       {
         id: 'htn-peers-nav-link',
         slot: 'patient-chart-dashboard-slot',
-        load: getSyncLifecycle(createDashboardLink(dashboardMeta), options),
-        meta: dashboardMeta,
+        load: getSyncLifecycle(createFormDashboardLink(formDashboardMeta), options),
+        meta: formDashboardMeta,
         online: true,
         offline: true,
-      },
+      }
     ],
   };
 }

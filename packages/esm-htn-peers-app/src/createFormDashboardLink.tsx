@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'carbon-components-react';
-import { usePatient, useVisit, Visit } from '@openmrs/esm-framework';
+import { usePatient, useVisit } from '@openmrs/esm-framework';
 
 
 import { DashboardLinkConfig } from './types';
 import { launchPatientWorkspace } from './workspaces';
 
-export const createDashboardLink = (db: DashboardLinkConfig) => {
+export const createFormDashboardLink = (db: DashboardLinkConfig) => {
 
   const DashboardLink: React.FC<{ basePath: string }> = ({ basePath }) => {
 
