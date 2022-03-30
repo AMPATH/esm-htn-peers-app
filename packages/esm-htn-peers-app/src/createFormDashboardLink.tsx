@@ -33,9 +33,7 @@ export const createFormDashboardLink = (db: DashboardLinkConfig) => {
 
     return (
       <div key={db.name} onClick={() => {launchFormEntry()}}>
-        <Link className="bx--side-nav__link">
-          {db.title}
-        </Link>
+        <a href="#" onClick={(e) => {e.preventDefault()}} className="bx--side-nav__link">{db.title}</a>
       </div>
     );
   };

@@ -66,6 +66,13 @@ function setupOpenMRS() {
         offline: true,
       },
       {
+        id: 'htn-peer-encounter-form',
+        load: getAsyncLifecycle(() => import('./components/peer-encounter-form/peer-encounter-form.component'), options),
+        online: true,
+        offline: true,
+        order: 1,
+      },
+      {
         id: 'htn-peers-nav-link',
         slot: 'patient-chart-dashboard-slot',
         load: getSyncLifecycle(createFormDashboardLink(formDashboardMeta), options),
