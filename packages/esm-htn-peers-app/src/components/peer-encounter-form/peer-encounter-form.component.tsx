@@ -20,7 +20,7 @@ const PeersEncounterForm: React.FC<PeersEncounterFormProps> = ({ patientUuid, cl
         <ExtensionSlot
           extensionSlotName="form-widget-slot"
           state={{
-            formUuid: 'b2a787bc-433c-48c5-b2b6-11a65ff6d8a7',
+            formUuid: 'b76f4d39-4619-42b1-a437-abdb4d396968',
             visitUuid: currentVisit?.uuid,
             encounterUuid: null,
             visitTypeUuid: currentVisit?.visitType?.uuid,
