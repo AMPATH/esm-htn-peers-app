@@ -40,8 +40,9 @@ export function mergePatienInfo(mappedPatientInfo: Array<any>, patientOrders: Ar
     const orders = patientOrders.filter((response) =>{
       return response.url.match(new RegExp(info.uuid));
     });
+
     info.orders = orders[0]?.data?.results;
-    info.encounter = extractEncounterMedData(orders[1]?.data?.results[0].obs);
+    info.encounter = info.orderslength > 0 ? extractEncounterMedData(orders[1]?.data?.results[0].obs) : null;
     return info;
   });
 

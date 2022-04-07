@@ -91,7 +91,7 @@ const PeerPatientList: React.FC<{}> = () => {
     }
 
   }, [relationships, patientData]);
-  console.log(patientData);
+  
   const headerData = useMemo(
     () => [
       {
@@ -153,7 +153,7 @@ const PeerPatientList: React.FC<{}> = () => {
                                 {cell.value}
                               </ConfigurableLink>
                             ) : (cell.value)}
-                            {cell.info.header === 'rtcDate' ? (
+                            {cell.info.header === 'rtcDate' && patientData?.[index]?.encounter ? (
                               formatDate(new Date(patientData?.[index]?.encounter?.return_visit_date[0]?.value))
                             ) : (null)}
                           </TableCell>
