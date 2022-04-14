@@ -73,7 +73,7 @@ const PeerPatientList: React.FC<{}> = () => {
       
       const patientInfoRequest = getPatientInfo(patientUuids, abortController);
       const patientOrdersRequest = getPatientOrders(patientUuids, abortController, 'ACTIVE');
-      const patientEncounterRequest = getPatientEncounter(patientUuids, 'BIGPICTELECARE', abortController);
+      const patientEncounterRequest = getPatientEncounter(patientUuids, 'PT4APEER', abortController);
   
       Promise.all(patientInfoRequest).then((patientInfo) => {
         const mappedInfo = mapPatienInfo(patientInfo);
