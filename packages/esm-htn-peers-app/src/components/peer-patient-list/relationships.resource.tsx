@@ -49,7 +49,8 @@ function extractRelationshipData(
       });
     }
   }
-  return relationshipsData;
+
+  return relationshipsData.filter(r => r.relationshipType === "Patient");
 }
 
 interface RelationshipsResponse {
