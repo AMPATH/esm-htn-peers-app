@@ -1,5 +1,5 @@
 import { fetchCurrentPatient, openmrsFetch, OpenmrsResource, usePatient } from "@openmrs/esm-framework";
-import { snakeCase } from "lodash";
+import { snakeCase, uniqBy } from "lodash";
 
 import { Order } from '../types/medication-order';
 
@@ -41,8 +41,8 @@ export function mergePatienInfo(mappedPatientInfo: Array<any>, patientOrders: Ar
       return response.url.match(new RegExp(info.uuid));
     });
 
-    info.orders = orders[0]?.data?.results;
-    info.encounter = info.orderslength > 0 ? extractEncounterMedData(orders[1]?.data?.results[0].obs) : null;
+    info.orders = uniqBy(orders[0]?.data?.results, 'drug.uuid');
+    info.encounter = info.orders.length > 0 ? extractEncounterMedData(orders[1]?.data?.results[0].obs) : null;
     return info;
   });
 

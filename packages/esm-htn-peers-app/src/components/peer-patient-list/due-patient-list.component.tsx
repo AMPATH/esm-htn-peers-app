@@ -16,70 +16,33 @@ import {
   Tile,
 } from 'carbon-components-react';
 import { useTranslation } from 'react-i18next';
-import { ConfigurableLink, formatDate, useLayoutType, useSessionUser } from '@openmrs/esm-framework';
+import { ConfigurableLink, formatDate, useLayoutType } from '@openmrs/esm-framework';
 
-import { useRelationships } from './relationships.resource';
 import { EmptyIllustration } from '../../ui-components/empty-illustration.component';
 import styles from './peer-patient-list.scss';
-import { mapPatienInfo, mergePatienInfo } from '../../services/patient.service';
 import PatientInfoSummary from './patient-info-summary';
-import { getPatientEncounter, getPatientInfo, getPatientOrders } from '../../api/patient-resource';
-import DuePeerPatientList from './due-patient-list.component';
 
-const PeerPatientList: React.FC<{}> = () => {
+export interface DuePeerPatientListItem {
+    id: string;
+    name: string;
+    location?: string;
+    phone?: string;
+    rtcDate?: string;
+    [anythingElse: string]: any;
+}
+
+export interface DuePeerPatientListProps {
+    items: Array<DuePeerPatientListItem>;
+    orders: Array<any>;
+    isLoading: boolean;
+    ordersLoading: boolean;
+}
+
+const DuePeerPatientList: React.FC<DuePeerPatientListProps> = ({items, orders, isLoading, ordersLoading}) => {
   const { t } = useTranslation();
   const layout = useLayoutType();
   const desktopView = layout === 'desktop';
   const isTablet = layout === 'tablet';
-
-  const sessionUser = useSessionUser();
-  const [user, setUser] = useState(null);
-  const [patientData, setPatientData] = useState(null);
-  const [ordersLoading, setOrdersLoading] = useState(true);
-  const [patientOrders, setPatientOrders] = useState(null);
-  const [dueDeliveries, setDueDeliveries] = useState(null);
-
-  useEffect(() => {
-    if (sessionUser) {
-      setUser(sessionUser);
-    }
-  }, [sessionUser]);
-
-  const { data: relationships, isLoading } = useRelationships(user?.user?.person?.uuid);
-
-  useMemo(() => {
-    const abortController = new AbortController();
-    
-    if(relationships && !patientData) {
-      const patientUuids = [];
-      relationships.forEach((patient) => {
-        patientUuids.push(patient.relativeUuid);
-      });
-      
-      const patientInfoRequest = getPatientInfo(patientUuids, abortController);
-      const patientOrdersRequest = getPatientOrders(patientUuids, abortController, 'ACTIVE');
-      const patientEncounterRequest = getPatientEncounter(patientUuids, 'PT4APEER', abortController);
-  
-      Promise.all(patientInfoRequest).then((patientInfo) => {
-        const mappedInfo = mapPatienInfo(patientInfo);
-        setPatientData(mappedInfo);
-        return mappedInfo;
-      }).then((mappedInfo) => {
-        // not the best way to handle this but can suffice for now
-        Promise.all(patientOrdersRequest.concat(patientEncounterRequest)).then((encounterDrugOrders) => {
-          const mergedInfo = mergePatienInfo(mappedInfo, encounterDrugOrders);
-          setDueDeliveries(mergedInfo.filter((patient) => {
-            const dateInfo = patient.encounter? patient.encounter.return_visit_date[0] : null;
-            return dateInfo ? diffDays(new Date(), new Date(dateInfo.value)) <= 7 : false;
-          }))
-          setPatientData(mergedInfo);
-          setPatientOrders(mergedInfo);
-          setOrdersLoading(false);
-        });
-      });
-    }
-
-  }, [relationships, patientData]);
   
   const headerData = useMemo(
     () => [
@@ -111,17 +74,13 @@ const PeerPatientList: React.FC<{}> = () => {
     return <DataTableSkeleton role="progressbar" />;
   }
 
-  if (patientData?.length) {
+  if (items?.length) {
     return (
-      <>
-      {dueDeliveries?.length ? (
-        <DuePeerPatientList items={dueDeliveries} isLoading={isLoading} ordersLoading={ordersLoading} orders={patientOrders} />
-      ) : (null)}
       <div className={styles.peerPatientsContainer}>
         <div className={styles.peerPatientsDetailHeaderContainer}>
-          <h4 className={styles.productiveHeading02}>{t('peerPatients', 'Your Peer Patients')}</h4>
+          <h4 className={styles.productiveHeading02}>{t('duePeerPatients', 'Peer patients due for delivery this week')}</h4>
         </div>
-        <DataTable rows={patientData} headers={headerData} isSortable>
+        <DataTable rows={items} headers={headerData} isSortable>
           {({ rows, headers, getHeaderProps, getTableProps, getBatchActionProps, getRowProps }) => (
             <TableContainer title="" className={styles.tableContainer}>
               <Table className={styles.peerPatientsTable} {...getTableProps()} size={desktopView ? 'short' : 'normal'}>
@@ -141,13 +100,13 @@ const PeerPatientList: React.FC<{}> = () => {
                           <TableCell key={cell.id}>
                             {cell.info.header === 'name' ? (
                               <ConfigurableLink
-                                to={`\${openmrsSpaBase}/patient/${patientData?.[index]?.uuid}/chart/`}
+                                to={`\${openmrsSpaBase}/patient/${items?.[index]?.uuid}/chart/`}
                               >
                                 {cell.value}
                               </ConfigurableLink>
                             ) : (cell.value)}
-                            {cell.info.header === 'rtcDate' && patientData?.[index]?.encounter ? (
-                              formatDate(new Date(patientData?.[index]?.encounter?.return_visit_date[0]?.value))
+                            {cell.info.header === 'rtcDate' && items?.[index]?.encounter ? (
+                              formatDate(new Date(items?.[index]?.encounter?.return_visit_date[0]?.value))
                             ) : (null)}
                           </TableCell>
                         ))}
@@ -161,7 +120,7 @@ const PeerPatientList: React.FC<{}> = () => {
                                   <InlineLoading />
                                 </span>
                               ) : (
-                                <PatientInfoSummary patientInfo={patientOrders?.[index].orders} />
+                                <PatientInfoSummary patientInfo={orders?.[index].orders} />
                                 )
                             }
                           </TableExpandedRow>
@@ -182,7 +141,6 @@ const PeerPatientList: React.FC<{}> = () => {
           )}
         </DataTable>
       </div>
-      </>
     );
   }
 
@@ -193,17 +151,11 @@ const PeerPatientList: React.FC<{}> = () => {
           <h4>{t('peerPatients', 'Peer Patients')}</h4>
         </div>
         <EmptyIllustration />
-        <p className={styles.content}>{t('noPeerPatients', 'You have not been assigned any peer patients.')}</p>
+        <p className={styles.content}>{t('noDuePeerPatients', 'You have no peer patients who are due for delivery for the next week.')}</p>
       </Tile>
     </div>
   );
 };
 
-// calculate the difference between 2 dates in days
-function diffDays(from: Date, to: Date) {
-  let diffTime = to.getTime() - from.getTime();
-  return Math.round((diffTime / (1000 * 3600 * 24)));
-}
 
-
-export default PeerPatientList;
+export default DuePeerPatientList;

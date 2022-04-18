@@ -1,6 +1,4 @@
-import useSWR from 'swr';
 import { openmrsFetch } from '@openmrs/esm-framework';
-import { PatientMedicationFetchResponse } from '../types/medication-order';
 
 const careSettingUuid = '6f0c9a92-6f24-11e3-af88-005056821db0';
 
@@ -16,7 +14,7 @@ export function getPatientOrders(patientUuids: Array<string>, abortController: A
     const drugOrders = [];
   
     patientUuids.forEach(patientUuid => {
-        drugOrders.push(openmrsFetch(`/ws/rest/v1/order?patient=${patientUuid}&careSetting=${careSettingUuid}&status=${status}&v=${customRepresentation}`, {
+        drugOrders.push(openmrsFetch(`/ws/rest/v1/order?patient=${patientUuid}&orderType=53eb466e-1359-11df-a1f1-0026b9348838&careSetting=${careSettingUuid}&status=${status}&v=${customRepresentation}`, {
         signal: abortController.signal,
       }));
     });
