@@ -46,7 +46,7 @@ const PeerPatientList: React.FC<{}> = () => {
   }, [sessionUser]);
 
   const { data: relationships, isLoading } = useRelationships(user?.user?.person?.uuid);
-
+  
   useMemo(() => {
     const abortController = new AbortController();
     

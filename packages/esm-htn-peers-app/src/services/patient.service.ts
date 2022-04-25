@@ -27,7 +27,7 @@ export function mapPatienInfo(data: Array<any>) {
         name: info.display,
         id: `${index}`,
         phone: phone?.value,
-        location: address.address1 + ': '+ address.countyDistrict + '/' + address.cityVillage
+        location: address?.address1 + ': '+ address?.countyDistrict + '/' + address?.cityVillage
       });
   });
 
@@ -42,7 +42,7 @@ export function mergePatienInfo(mappedPatientInfo: Array<any>, patientOrders: Ar
     });
 
     info.orders = uniqBy(orders[0]?.data?.results, 'drug.uuid');
-    info.encounter = info.orders.length > 0 ? extractEncounterMedData(orders[1]?.data?.results[0].obs) : null;
+    info.encounter = orders[1]?.data?.results.length > 0 ? extractEncounterMedData(orders[1]?.data?.results[0].obs) : null;
     return info;
   });
 
