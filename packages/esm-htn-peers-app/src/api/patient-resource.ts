@@ -1,8 +1,9 @@
 import { openmrsFetch } from '@openmrs/esm-framework';
+import { PEER_PROVIDER_IDS } from '../peers';
 
 const careSettingUuid = '6f0c9a92-6f24-11e3-af88-005056821db0';
 
-export function getPatientOrders(patientUuids: Array<string>, abortController: AbortController, status: 'ACTIVE' | 'any') {
+export function getPatientOrder(patientUuid: string, abortController: AbortController, status: 'ACTIVE' | 'any') {
   const customRepresentation =
     'custom:(uuid,dosingType,orderNumber,accessionNumber,' +
     'patient:ref,action,careSetting:ref,previousOrder:ref,dateActivated,scheduledDate,dateStopped,autoExpireDate,' +
@@ -11,15 +12,10 @@ export function getPatientOrders(patientUuids: Array<string>, abortController: A
     'frequency:ref,asNeeded,asNeededCondition,quantity,quantityUnits:ref,numRefills,dosingInstructions,' +
     'duration,durationUnits:ref,route:ref,brandName,dispenseAsWritten)';
 
-    const drugOrders = [];
   
-    patientUuids.forEach(patientUuid => {
-        drugOrders.push(openmrsFetch(`/ws/rest/v1/order?patient=${patientUuid}&orderType=53eb466e-1359-11df-a1f1-0026b9348838&careSetting=${careSettingUuid}&status=${status}&v=${customRepresentation}`, {
-        signal: abortController.signal,
-      }));
+    return openmrsFetch(`/ws/rest/v1/order?patient=${patientUuid}&orderType=53eb466e-1359-11df-a1f1-0026b9348838&careSetting=${careSettingUuid}&status=${status}&v=${customRepresentation}`, {
+      signal: abortController.signal,
     });
-  
-    return drugOrders;
 }
 
 export function getPatientEncounter(patientUuids: Array<string>, encounterType: string, abortController: AbortController) {
@@ -40,12 +36,24 @@ export function getPatientEncounter(patientUuids: Array<string>, encounterType: 
   return encounters;  
 }
 
+export function getPeers(abortController: AbortController) {
+  const customRepresentation = 'custom:(uuid,display,person:(uuid))';
+
+  const peers = [];
+  
+  PEER_PROVIDER_IDS.forEach(providerId => {
+    peers.push(openmrsFetch(`/ws/rest/v1/provider?q=${providerId}&v=${customRepresentation}`, {
+        signal: abortController.signal,
+    }));
+  });
+  
+  return peers;  
+}
+
 export function getPatientInfo(patientUuids: Array<string>, abortController: AbortController) {
 
     const customRepresentation =
     'custom:(uuid,display,' +
-    'identifiers:(identifier,uuid,preferred,location:(uuid,name),' +
-    'identifierType:(uuid,name,format,formatDescription,validator)),' +
     'person:(uuid,display,gender,birthdate,dead,age,deathDate,birthdateEstimated,' +
     'causeOfDeath,preferredName:(uuid,preferred,givenName,middleName,familyName),' +
     'attributes:(uuid,display,value,attributeType,dateCreated,dateChanged),preferredAddress:(uuid,preferred,address1,address2,cityVillage,longitude,' +

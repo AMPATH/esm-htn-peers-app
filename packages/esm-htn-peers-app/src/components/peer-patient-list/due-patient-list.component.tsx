@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   DataTable,
   DataTableSkeleton,
@@ -13,7 +13,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  TableToolbar,
+  TableToolbarContent,
   Tile,
+  ToggleSmall,
 } from 'carbon-components-react';
 import { useTranslation } from 'react-i18next';
 import { ConfigurableLink, formatDate, useLayoutType } from '@openmrs/esm-framework';
@@ -33,16 +36,18 @@ export interface DuePeerPatientListItem {
 
 export interface DuePeerPatientListProps {
     items: Array<DuePeerPatientListItem>;
-    orders: Array<any>;
     isLoading: boolean;
-    ordersLoading: boolean;
+    peerId: string;
 }
 
-const DuePeerPatientList: React.FC<DuePeerPatientListProps> = ({items, orders, isLoading, ordersLoading}) => {
+const DuePeerPatientList: React.FC<DuePeerPatientListProps> = ({items, isLoading, peerId}) => {
   const { t } = useTranslation();
   const layout = useLayoutType();
   const desktopView = layout === 'desktop';
   const isTablet = layout === 'tablet';
+
+  const [showFake, setShowFake] = useState(false);
+  const toggleFake = useCallback((isFake) => (isFake && !showFake)? "hidden fake" : "", [showFake])
   
   const headerData = useMemo(
     () => [
@@ -78,11 +83,24 @@ const DuePeerPatientList: React.FC<DuePeerPatientListProps> = ({items, orders, i
     return (
       <div className={styles.peerPatientsContainer}>
         <div className={styles.peerPatientsDetailHeaderContainer}>
-          <h4 className={styles.productiveHeading02}>{t('duePeerPatients', 'Peer patients due for delivery this week')}</h4>
+          <h4 className={styles.productiveHeading02}>{t('duePeerPatients', 'Peer patients due for delivery within the next 7 days')}</h4>
         </div>
         <DataTable rows={items} headers={headerData} isSortable>
           {({ rows, headers, getHeaderProps, getTableProps, getBatchActionProps, getRowProps }) => (
             <TableContainer title="" className={styles.tableContainer}>
+              <TableToolbar>
+                <TableToolbarContent>
+                <ToggleSmall
+                  id={"showFake-due-"+peerId}
+                  aria-label={t('showFake', 'Show Fake Patients')}
+                  labelText={t('showFake', 'Show Test Patients')}
+                  toggled={showFake}
+                  onChange={() => {} /* Required by the typings, but we don't need it. */}
+                  onToggle={(value) => setShowFake(value)
+                  }
+                />
+                </TableToolbarContent>
+              </TableToolbar>
               <Table className={styles.peerPatientsTable} {...getTableProps()} size={desktopView ? 'short' : 'normal'}>
                 <TableHead>
                   <TableRow>
@@ -95,7 +113,7 @@ const DuePeerPatientList: React.FC<DuePeerPatientListProps> = ({items, orders, i
                 <TableBody>
                   {rows.map((row, index) => (
                     <React.Fragment key={index}>
-                      <TableExpandRow {...getRowProps({ row })}>
+                      <TableExpandRow {...getRowProps({ row })} className={toggleFake(items?.[index]?.isFake)}>
                         {row.cells.map((cell) => (
                           <TableCell key={cell.id}>
                             {cell.info.header === 'name' ? (
@@ -112,17 +130,9 @@ const DuePeerPatientList: React.FC<DuePeerPatientListProps> = ({items, orders, i
                         ))}
                       </TableExpandRow>
                       {row.isExpanded ? (
-                          <TableExpandedRow className={styles.expandedRow} style={{ paddingLeft: isTablet ? '4rem' : '3rem' }} colSpan={headers.length + 2}
-                          >
-                            {
-                              ordersLoading? (
-                                <span>
-                                  <InlineLoading />
-                                </span>
-                              ) : (
-                                <PatientInfoSummary patientInfo={orders?.[index].orders} />
-                                )
-                            }
+                          <TableExpandedRow className={styles.expandedRow} style={{ paddingLeft: isTablet ? '4rem' : '3rem' }} 
+                          colSpan={headers.length + 2}>
+                           <PatientInfoSummary patientUuid={items?.[index]?.uuid} />
                           </TableExpandedRow>
                         ) : (null)}
                     </React.Fragment>

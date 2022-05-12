@@ -22,27 +22,24 @@ export function mapPatienInfo(data: Array<any>) {
       const info = response.data;
       const address = info?.person.preferredAddress;
       const phone = info?.person.attributes.filter((attr) => attr.attributeType.uuid==='72a759a8-1359-11df-a1f1-0026b9348838')[0]
+      const isFake = info?.person.attributes.filter((attr) => attr.attributeType.uuid==='1e38f1ca-4257-4a03-ad5d-f4d972074e69')[0]
       mappedInfo.push({
         ...info,
         name: info.display,
+        isFake: isFake!=undefined || !!info.display.match(/test/i),
         id: `${index}`,
         phone: phone?.value,
-        location: address?.address1 + ': '+ address?.countyDistrict + '/' + address?.cityVillage
+        location: address?.address1 + ': '+ address?.address2 + '/' + address?.address3
       });
   });
 
   return mappedInfo;
 }
 
-export function mergePatienInfo(mappedPatientInfo: Array<any>, patientOrders: Array<any>) {
+export function mergePatienInfo(mappedPatientInfo: Array<any>, peerEncounters: Array<any>) {
   
-  return mappedPatientInfo.map((info) =>{
-    const orders = patientOrders.filter((response) =>{
-      return response.url.match(new RegExp(info.uuid));
-    });
-
-    info.orders = uniqBy(orders[0]?.data?.results, 'drug.uuid');
-    info.encounter = orders[1]?.data?.results.length > 0 ? extractEncounterMedData(orders[1]?.data?.results[0].obs) : null;
+  return mappedPatientInfo.map((info, index) =>{
+    info.encounter = peerEncounters[index].data?.results.length > 0 ? extractEncounterMedData(peerEncounters[index].data?.results[0].obs) : null;
     return info;
   });
 

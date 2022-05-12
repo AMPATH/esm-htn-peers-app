@@ -40,12 +40,12 @@ function setupOpenMRS() {
     pages: [
       {
         route: 'app',
-        load: getAsyncLifecycle(() => import('./components/peer-patient-list/peer-patient-list.component'), {
+        load: getAsyncLifecycle(() => import('./peers-home/peers-home.component'), {
           featureName: 'htn-peers',
           moduleName,
         }),
         online: true,
-        offline: true,
+        offline: false,
       },
     ],
     extensions: [

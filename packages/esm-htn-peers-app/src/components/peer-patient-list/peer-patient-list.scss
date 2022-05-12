@@ -159,4 +159,23 @@
   border: 1px solid $ui-03;
 }
 
+:global(.bx--parent-row.fake) {
+  display: none;
+}
+
+:global(.bx--toggle-input__label) {
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+:global(.bx--toggle-input__label .bx--toggle__switch) {
+  margin-left: 1rem;
+  margin-top: 0;
+}
+
+:global(.bx--table-toolbar) {
+  padding: 0.25rem 0 0.25rem 1rem;
+}
+
 

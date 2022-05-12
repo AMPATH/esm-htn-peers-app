@@ -1,24 +1,44 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SkeletonText } from 'carbon-components-react';
-import { formatDate, OpenmrsResource } from '@openmrs/esm-framework';
+import { DataTableSkeleton } from 'carbon-components-react';
+import { formatDate } from '@openmrs/esm-framework';
 
 import styles from './patient-info-summary.scss';
+import { getPatientOrder } from '../../api/patient-resource';
+import { uniqBy } from 'lodash';
 
 interface PatientInfoProps {
-  patientInfo: Array<OpenmrsResource>;
+  patientUuid: string;
 }
 
-const PatientInfoSummary: React.FC<PatientInfoProps> = ({ patientInfo }) => {
+const PatientInfoSummary: React.FC<PatientInfoProps> = ({ patientUuid }) => {
   const { t } = useTranslation();
+  const abortController = new AbortController();
+  
+  const [patientInfo, setPatientInfo] = useState(null);
+  const [orderLoading, setOrderLoading] = useState(true);
 
-  if (!patientInfo) {
-    return <SkeletonText />;
+  const patientOrdersRequest = getPatientOrder(patientUuid, abortController, 'ACTIVE');
+
+  useEffect(() => {
+
+    if(!patientInfo && orderLoading) {
+        patientOrdersRequest.then((order) => {
+          setOrderLoading(false);
+          setPatientInfo(uniqBy(order.data?.results, 'drug.uuid'));
+        });
+    }
+
+  }, [patientInfo, orderLoading]);
+  
+
+  if (orderLoading) {
+    return <DataTableSkeleton role="progressbar" />;
   }
 
   return (
     <div className={''}>
-      { patientInfo.map((medication, index) => (
+      { patientInfo && patientInfo.map((medication, index) => (
         <React.Fragment key={index}>
         <div className={styles.searchResultTile}>
           <div className={styles.searchResultTileContent}>
