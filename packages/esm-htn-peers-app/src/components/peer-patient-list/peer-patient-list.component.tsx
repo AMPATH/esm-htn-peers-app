@@ -52,8 +52,8 @@ const PeerPatientList: React.FC<PeerPatientListProps> = ({user}) => {
   const [showFake, setShowFake] = useState(false);
   const { data: relationships, isLoading } = useRelationships(user?.person?.uuid);
 
-  const pageSizes = [10, 20];
-  const [currentPageSize, setPageSize] = useState(10);
+  const pageSizes = [20, 30];
+  const [currentPageSize, setPageSize] = useState(20);
 
   const toggleFake = useCallback((isFake) => (isFake && !showFake)? "hidden fake" : "", [showFake])
   
