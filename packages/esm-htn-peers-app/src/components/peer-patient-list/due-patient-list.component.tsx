@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+/* eslint-disable prettier/prettier */
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   DataTable,
   DataTableSkeleton,
-  InlineLoading,
   Table,
   TableBody,
   TableCell,
@@ -26,29 +26,29 @@ import styles from './peer-patient-list.scss';
 import PatientInfoSummary from './patient-info-summary';
 
 export interface DuePeerPatientListItem {
-    id: string;
-    name: string;
-    location?: string;
-    phone?: string;
-    rtcDate?: string;
-    [anythingElse: string]: any;
+  id: string;
+  name: string;
+  location?: string;
+  phone?: string;
+  rtcDate?: string;
+  [anythingElse: string]: any;
 }
 
 export interface DuePeerPatientListProps {
-    items: Array<DuePeerPatientListItem>;
-    isLoading: boolean;
-    peerId: string;
+  items: Array<DuePeerPatientListItem>;
+  isLoading: boolean;
+  peerId: string;
 }
 
-const DuePeerPatientList: React.FC<DuePeerPatientListProps> = ({items, isLoading, peerId}) => {
+const DuePeerPatientList: React.FC<DuePeerPatientListProps> = ({ items, isLoading, peerId }) => {
   const { t } = useTranslation();
   const layout = useLayoutType();
   const desktopView = layout === 'desktop';
   const isTablet = layout === 'tablet';
 
   const [showFake, setShowFake] = useState(false);
-  const toggleFake = useCallback((isFake) => (isFake && !showFake)? "hidden fake" : "", [showFake])
-  
+  const toggleFake = useCallback((isFake) => (isFake && !showFake ? 'hidden fake' : ''), [showFake]);
+
   const headerData = useMemo(
     () => [
       {
@@ -70,7 +70,7 @@ const DuePeerPatientList: React.FC<DuePeerPatientListProps> = ({items, isLoading
         id: 3,
         header: t('rtcDate', 'Next Visit Date'),
         key: 'rtcDate',
-      }
+      },
     ],
     [t],
   );
@@ -83,22 +83,26 @@ const DuePeerPatientList: React.FC<DuePeerPatientListProps> = ({items, isLoading
     return (
       <div className={styles.peerPatientsContainer}>
         <div className={styles.peerPatientsDetailHeaderContainer}>
-          <h4 className={styles.productiveHeading02}>{t('duePeerPatients', 'Peer patients due for delivery within the next 7 days')}</h4>
+          <h4 className={styles.productiveHeading02}>
+            {t('duePeerPatients', 'Peer patients due for delivery within the next 7 days')}
+          </h4>
         </div>
-        <DataTable rows={items} headers={headerData} isSortable>
-          {({ rows, headers, getHeaderProps, getTableProps, getBatchActionProps, getRowProps }) => (
+        <DataTable
+          rows={items}
+          headers={headerData}
+          isSortable
+          render={({ rows, headers, getHeaderProps, getTableProps, getBatchActionProps, getRowProps }) => (
             <TableContainer title="" className={styles.tableContainer}>
               <TableToolbar>
                 <TableToolbarContent>
-                <ToggleSmall
-                  id={"showFake-due-"+peerId}
-                  aria-label={t('showFake', 'Show Fake Patients')}
-                  labelText={t('showFake', 'Show Test Patients')}
-                  toggled={showFake}
-                  onChange={() => {} /* Required by the typings, but we don't need it. */}
-                  onToggle={(value) => setShowFake(value)
-                  }
-                />
+                  <ToggleSmall
+                    id={'showFake-due-' + peerId}
+                    aria-label={t('showFake', 'Show Fake Patients')}
+                    labelText={t('showFake', 'Show Test Patients')}
+                    toggled={showFake}
+                    onChange={() => {} /* Required by the typings, but we don't need it. */}
+                    onToggle={(value) => setShowFake(value)}
+                  />
                 </TableToolbarContent>
               </TableToolbar>
               <Table className={styles.peerPatientsTable} {...getTableProps()} size={desktopView ? 'short' : 'normal'}>
@@ -117,24 +121,27 @@ const DuePeerPatientList: React.FC<DuePeerPatientListProps> = ({items, isLoading
                         {row.cells.map((cell) => (
                           <TableCell key={cell.id}>
                             {cell.info.header === 'name' ? (
-                              <ConfigurableLink
-                                to={`\${openmrsSpaBase}/patient/${items?.[index]?.uuid}/chart/`}
-                              >
+                              <ConfigurableLink to={`\${openmrsSpaBase}/patient/${items?.[index]?.uuid}/chart/`}>
                                 {cell.value}
                               </ConfigurableLink>
-                            ) : (cell.value)}
-                            {cell.info.header === 'rtcDate' && items?.[index]?.encounter ? (
-                              formatDate(new Date(items?.[index]?.encounter?.return_visit_date[0]?.value))
-                            ) : (null)}
+                            ) : (
+                              cell.value
+                            )}
+                            {cell.info.header === 'rtcDate' && items?.[index]?.encounter
+                              ? formatDate(new Date(items?.[index]?.encounter?.return_visit_date[0]?.value))
+                              : null}
                           </TableCell>
                         ))}
                       </TableExpandRow>
                       {row.isExpanded ? (
-                          <TableExpandedRow className={styles.expandedRow} style={{ paddingLeft: isTablet ? '4rem' : '3rem' }} 
-                          colSpan={headers.length + 2}>
-                           <PatientInfoSummary patientUuid={items?.[index]?.uuid} />
-                          </TableExpandedRow>
-                        ) : (null)}
+                        <TableExpandedRow
+                          className={styles.expandedRow}
+                          style={{ paddingLeft: isTablet ? '4rem' : '3rem' }}
+                          colSpan={headers.length + 2}
+                        >
+                          <PatientInfoSummary patientUuid={items?.[index]?.uuid} />
+                        </TableExpandedRow>
+                      ) : null}
                     </React.Fragment>
                   ))}
                 </TableBody>
@@ -149,7 +156,7 @@ const DuePeerPatientList: React.FC<DuePeerPatientListProps> = ({items, isLoading
               )}
             </TableContainer>
           )}
-        </DataTable>
+        />
       </div>
     );
   }
@@ -161,11 +168,12 @@ const DuePeerPatientList: React.FC<DuePeerPatientListProps> = ({items, isLoading
           <h4>{t('peerPatients', 'Peer Patients')}</h4>
         </div>
         <EmptyIllustration />
-        <p className={styles.content}>{t('noDuePeerPatients', 'You have no peer patients who are due for delivery for the next week.')}</p>
+        <p className={styles.content}>
+          {t('noDuePeerPatients', 'You have no peer patients who are due for delivery for the next week.')}
+        </p>
       </Tile>
     </div>
   );
 };
-
 
 export default DuePeerPatientList;

@@ -1,7 +1,7 @@
 import {
   defineConfigSchema,
   getAsyncLifecycle,
-  getSyncLifecycle, 
+  getSyncLifecycle,
   messageOmrsServiceWorker,
 } from '@openmrs/esm-framework';
 
@@ -16,12 +16,7 @@ const backendDependencies = {
   'webservices.rest': '^2.2.0',
 };
 
-const frontendDependencies = {
-  '@openmrs/esm-framework': process.env.FRAMEWORK_VERSION,
-};
-
 function setupOpenMRS() {
-
   messageOmrsServiceWorker({
     type: 'registerDynamicRoute',
     pattern: '.+/ws/rest/v1/relationship.+',
@@ -67,7 +62,10 @@ function setupOpenMRS() {
       },
       {
         id: 'htn-peer-encounter-form',
-        load: getAsyncLifecycle(() => import('./components/peer-encounter-form/peer-encounter-form.component'), options),
+        load: getAsyncLifecycle(
+          () => import('./components/peer-encounter-form/peer-encounter-form.component'),
+          options,
+        ),
         online: true,
         offline: true,
         order: 1,
@@ -79,9 +77,9 @@ function setupOpenMRS() {
         meta: formDashboardMeta,
         online: true,
         offline: true,
-      }
+      },
     ],
   };
 }
 
-export { backendDependencies, frontendDependencies, importTranslation, setupOpenMRS };
+export { backendDependencies, importTranslation, setupOpenMRS };

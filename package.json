@@ -5,7 +5,7 @@
     "packages/*"
   ],
   "scripts": {
-    "start": "openmrs develop --sources packages/esm-htn-peers-app/",
+    "start": "openmrs develop --sources packages/esm-htn-peers-app/ --importmap=https://poc-test-builds.fra1.cdn.digitaloceanspaces.com/@htn-peers/importmap/importmap.json --config-url=https://poc-test-builds.fra1.cdn.digitaloceanspaces.com/@htn-peers/config/config.json --port=8085 --backend=https://ngx.ampath.or.ke/ --api-url=/amrs/",
     "start:kibana": "openmrs develop --backend=https://kibana.ampath.or.ke/ --api-url=/amrs/ --sources packages/esm-htn-peers-app/ --importmap=https://poc-test-builds.fra1.digitaloceanspaces.com/@importmap/import-map.json",
     "start-all": "openmrs develop --sources 'packages/esm-*-app/'",
     "ci:publish": "lerna publish from-package --yes",
@@ -28,7 +28,7 @@
     "@babel/preset-react": "^7.10.4",
     "@babel/preset-typescript": "^7.10.4",
     "@babel/runtime": "^7.12.13",
-    "@openmrs/esm-framework": "^3.1.14",
+    "@openmrs/esm-framework": "next",
     "@testing-library/dom": "^7.20.0",
     "@testing-library/jest-dom": "^5.11.0",
     "@testing-library/react": "^10.4.3",

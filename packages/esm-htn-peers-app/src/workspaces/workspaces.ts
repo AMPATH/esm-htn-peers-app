@@ -1,4 +1,5 @@
-import { ExtensionRegistration, getExtensionRegistration, getGlobalStore, translateFrom } from '@openmrs/esm-framework';
+import { ExtensionRegistration, getGlobalStore, translateFrom } from '@openmrs/esm-framework';
+import { getExtensionRegistration } from '@openmrs/esm-framework/src/internal';
 import _i18n from 'i18next';
 import { WorkspaceWindowState } from '../types/workspace';
 
@@ -128,7 +129,7 @@ export function launchPatientWorkspace(name: string, additionalProps?: object) {
         body: translateFrom(
           '@openmrs/esm-patient-chart-app',
           'workspaceModalText',
-          `Launching a new form in the workspace could cause you to lose unsaved work on the ${currentName} form.`
+          `Launching a new form in the workspace could cause you to lose unsaved work on the ${currentName} form.`,
         ),
         onConfirm: () => {
           const state = store.getState();
@@ -137,7 +138,7 @@ export function launchPatientWorkspace(name: string, additionalProps?: object) {
             prompt: null,
           });
         },
-        confirmText: translateFrom('@openmrs/esm-patient-chart-app', 'openAnyway', 'Open anyway')
+        confirmText: translateFrom('@openmrs/esm-patient-chart-app', 'openAnyway', 'Open anyway'),
       };
       store.setState({ ...state, prompt });
     }
