@@ -1,0 +1,66 @@
+export interface DashbardGridConfig {
+  columns: number;
+  type: 'grid';
+}
+
+export interface DashboardTabConfig {
+  type: 'tabs';
+}
+
+export interface DashboardLinkConfig {
+  name: string;
+  title: string;
+}
+
+export interface DashboardConfig extends DashboardLinkConfig {
+  slot: string;
+  config: DashbardGridConfig | DashboardTabConfig;
+}
+
+/**
+ * The form encounter as it is fetched from the API.
+ */
+ export interface FormEncounter {
+  uuid: string;
+  encounterType?: EncounterType;
+  name: string;
+  version: string;
+  published: boolean;
+  retired: boolean;
+  resources: Array<FormEncounterResource>;
+}
+
+/**
+ * The resource part of a form encounter.
+ */
+export interface FormEncounterResource {
+  uuid: string;
+  name: string;
+  dataType: string;
+  valueReference: string;
+}
+
+/**
+ * An encounter which references the form which created the encounter (by being filled out).
+ */
+export interface EncounterWithFormRef {
+  uuid: string;
+  encounterType?: EncounterType;
+  encounterDatetime: string;
+  form?: FormEncounter;
+}
+
+export interface EncounterType {
+  uuid: string;
+  name: string;
+}
+
+export interface ListResponse<T> {
+  results: Array<T>;
+}
+
+export interface CompletedFormInfo {
+  form: FormEncounter;
+  associatedEncounters: Array<EncounterWithFormRef>;
+  lastCompleted?: Date;
+}

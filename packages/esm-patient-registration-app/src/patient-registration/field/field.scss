@@ -1,0 +1,79 @@
+@import "~carbon-components/scss/globals/scss/vendor/@carbon/elements/scss/type/styles";
+@import "~carbon-components/src/globals/scss/vendor/@carbon/layout/scss/generated/spacing";
+
+.productiveHeading02 {
+  @include carbon--type-style("productive-heading-02");
+  margin-bottom: 1rem;
+}
+
+.productiveHeading02Light {
+  @include carbon--type-style("productive-heading-02");
+  margin-bottom: 1rem;
+  color: #525252;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: $spacing-05;
+}
+
+.halfWidthInDesktopView {
+  width: calc(50% - $spacing-05);
+}
+
+.patientPhoto {
+  display: flex;
+  justify-content: center;
+}
+
+.nameField {
+  grid-row: 1;
+  grid-column: 1;
+}
+
+.photoExtension {
+  margin-bottom: 1rem;
+  grid-row: 1;
+  grid-column: 2;
+  justify-self: center;
+}
+
+.sexField {
+  margin-bottom: $spacing-05;
+}
+
+.identifierLabelText {
+  display: flex;
+  align-items: center;
+}
+
+.setIDNumberButton {
+  margin-bottom: $spacing-05;
+}
+
+.setIDNumberButton > svg {
+  margin-left: $spacing-03;
+}
+
+:global(.omrs-breakpoint-lt-desktop){
+  .grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+  }
+  .nameField {
+    grid-row: 2;
+    grid-column: 1;
+  }
+  .photoExtension {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+  }
+  .radioButton label {
+    height: $spacing-09 !important;
+  }
+  .halfWidthInDesktopView {
+    width: 100%;
+  }
+}

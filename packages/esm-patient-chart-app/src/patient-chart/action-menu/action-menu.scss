@@ -1,0 +1,59 @@
+@import "~@openmrs/esm-styleguide/src/vars";
+@import "~carbon-components/src/globals/scss/vars";
+@import "~carbon-components/src/globals/scss/mixins";
+
+$icon-button-size: 48px;
+$actionPanelOffset: 48px;
+
+/* Desktop */
+:global(.omrs-breakpoint-gt-tablet) {
+  .sideRail {
+    position: fixed;
+    align-self: flex-end;
+    background: #ededed;
+    flex-direction: column;
+    display: flex;
+    height: 100%;
+    right: 0;
+    z-index: 1000;
+    width: $icon-button-size;
+    align-items: center;
+    border-left: 1px solid $text-03;
+
+    & div {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+
+      & button {
+        width: $icon-button-size;
+        height: $icon-button-size;
+        justify-content: center;
+        margin-top: $spacing-02;
+      }
+    }
+  }
+}
+
+/* Tablet */
+:global(.omrs-breakpoint-lt-desktop) {
+  .extensionStyles {
+    display: flex;
+    background-color: $ui-02;
+    width: 100%;
+    position: fixed !important;
+    bottom: 0;
+    height: $spacing-10;
+    border-top: $spacing-01 solid $ui-03;
+    z-index: 9000;
+
+    & > div {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+  }
+}
