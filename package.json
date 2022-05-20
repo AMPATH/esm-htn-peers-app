@@ -5,7 +5,7 @@
     "packages/*"
   ],
   "scripts": {
-    "start": " openmrs develop --sources packages/esm-patient-medications-app  packages/esm-patient-registration-app  packages/esm-patient-search-app  packages/esm-patient-chart-app  packages/esm-htn-peers-app --port=8075 --importmap=https://spa-modules.nyc3.digitaloceanspaces.com/import-map.json --backend=https://ngx.ampath.or.ke/ --api-url=/amrs/ --config-url=https://poc-test-builds.fra1.cdn.digitaloceanspaces.com/@htn-peers/config/config.json",
+    "start": "openmrs develop --sources packages/esm-patient-medications-app  packages/esm-patient-registration-app  packages/esm-patient-search-app  packages/esm-patient-chart-app  packages/esm-htn-peers-app --port=8050 --importmap=https://poc-test-builds.fra1.cdn.digitaloceanspaces.com/@htn-peers/importmap/importmap.json --backend=https://ngx.ampath.or.ke/ --api-url=/amrs/ --config-url=https://poc-test-builds.fra1.cdn.digitaloceanspaces.com/@htn-peers/config/config.json",
     "start-all": "openmrs develop --sources 'packages/esm-*-app/'",
     "ci:publish": "lerna publish from-package --yes",
     "ci:prepublish": "lerna publish from-package --no-git-reset --yes --dist-tag next",
@@ -18,6 +18,7 @@
     "coverage": "yarn test --coverage"
   },
   "devDependencies": {
+    "@babel/preset-react": "^7.17.12",
     "@jsenv/file-size-impact": "12.1.10",
     "@openmrs/esm-framework": "next",
     "@swc/cli": "^0.1.57",
@@ -37,7 +38,6 @@
     "@types/webpack-env": "^1.16.0",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
     "@typescript-eslint/parser": "^5.18.0",
-    "@babel/preset-react":"7.17.12",
     "babel-preset-minify": "^0.5.1",
     "concurrently": "^6.5.1",
     "cross-env": "^7.0.3",

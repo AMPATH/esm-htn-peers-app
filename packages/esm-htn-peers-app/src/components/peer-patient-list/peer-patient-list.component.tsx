@@ -1,12 +1,8 @@
 /* eslint-disable prettier/prettier */
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
-  Column,
   DataTable,
   DataTableSkeleton,
-  InlineLoading,
-  Pagination,
-  Row,
   Table,
   TableBody,
   TableCell,
@@ -37,12 +33,6 @@ interface PeerPatientListProps {
   user: OpenmrsResource;
 }
 
-interface PaginationData {
-  goTo: (page: number) => void;
-  results: Array<any>;
-  currentPage: number;
-}
-
 const PeerPatientList: React.FC<PeerPatientListProps> = ({ user }) => {
   const { t } = useTranslation();
   const layout = useLayoutType();
@@ -52,9 +42,6 @@ const PeerPatientList: React.FC<PeerPatientListProps> = ({ user }) => {
   const [dueDeliveries, setDueDeliveries] = useState(null);
   const [showFake, setShowFake] = useState(false);
   const { data: relationships, isLoading } = useRelationships(user?.person?.uuid);
-
-  const pageSizes = [20, 30];
-  const [currentPageSize, setPageSize] = useState(20);
 
   const toggleFake = useCallback((isFake) => (isFake && !showFake ? 'hidden fake' : ''), [showFake]);
 
@@ -100,11 +87,6 @@ const PeerPatientList: React.FC<PeerPatientListProps> = ({ user }) => {
         key: 'name',
       },
       {
-        id: 1,
-        header: t('location', 'Location'),
-        key: 'location',
-      },
-      {
         id: 2,
         header: t('phone', 'Phone'),
         key: 'phone',
@@ -117,12 +99,6 @@ const PeerPatientList: React.FC<PeerPatientListProps> = ({ user }) => {
     ],
     [t],
   );
-
-  const {
-    goTo,
-    results: paginatedPatients,
-    currentPage,
-  }: PaginationData = usePagination(patientData || [], currentPageSize);
 
   if (isLoading || !patientData) {
     return <DataTableSkeleton role="progressbar" />;
@@ -139,8 +115,8 @@ const PeerPatientList: React.FC<PeerPatientListProps> = ({ user }) => {
             <h4 className={styles.productiveHeading02}>{t('peerPatients', 'Peer Patients')} </h4>
           </div>
           <DataTable
-            rows={[]}
-            headers={[]}
+            rows={patientData}
+            headers={headerData}
             render={({ rows, headers, getHeaderProps, getTableProps, getBatchActionProps, getRowProps }) => (
               <TableContainer title="" className={styles.tableContainer}>
                 <TableToolbar>
@@ -211,43 +187,8 @@ const PeerPatientList: React.FC<PeerPatientListProps> = ({ user }) => {
                     {t('noPatientsFound', 'No patients found')}
                   </p>
                 )}
-                <Pagination
-                  forwardText="Next page"
-                  backwardText="Previous page"
-                  page={currentPage}
-                  pageSize={currentPageSize}
-                  pageSizes={pageSizes}
-                  totalItems={patientData.length}
-                  className={styles.pagination}
-                  onChange={({ pageSize, page }) => {
-                    if (pageSize !== currentPageSize) {
-                      setPageSize(pageSize);
-                    }
-                    if (page !== currentPage) {
-                      goTo(page);
-                    }
-                  }}
-                />
               </TableContainer>
             )}
-          />
-
-          <Pagination
-            forwardText="Next page"
-            backwardText="Previous page"
-            page={currentPage}
-            pageSize={currentPageSize}
-            pageSizes={pageSizes}
-            totalItems={patientData.length}
-            className={styles.pagination}
-            onChange={({ pageSize, page }) => {
-              if (pageSize !== currentPageSize) {
-                setPageSize(pageSize);
-              }
-              if (page !== currentPage) {
-                goTo(page);
-              }
-            }}
           />
         </div>
       </>

@@ -57,11 +57,6 @@ const DuePeerPatientList: React.FC<DuePeerPatientListProps> = ({ items, isLoadin
         key: 'name',
       },
       {
-        id: 1,
-        header: t('location', 'Location'),
-        key: 'location',
-      },
-      {
         id: 2,
         header: t('phone', 'Phone'),
         key: 'phone',
