@@ -64,7 +64,7 @@ const PrescribedMedicationsTable = connect<
         const encounterData = extractEncounterMedData(encounter.obs);
         const medObs = encounterData['TREATMENT STARTED, DETAILED'];
         const commonMeds = mapCommonMedsWithEncounter(pickDrugNamesFromObs(medObs));
-        
+        console.log(pickDrugNamesFromObs(medObs));
         mimicSearchMedications(commonMeds, encounter.uuid, abortController, daysDurationUnit).then((data) => {
           const orders = data.map((order: Array<any>) => {
             return order.filter((o) => byPrescriptionInfo(o, medObs))[0];
@@ -217,6 +217,11 @@ function pickDrugNamesFromObs(obs: Array<any>) : Array<string> {
       compounds.push(drugName.split(" AND ").pop());
       return drugName.split(" AND ").shift();
     }
+
+    if(drugName.match(/\s+\/\s+/)) {
+      compounds.push(drugName.split(" / ").pop());
+      return drugName.split(" / ").shift();
+    }
     return drugName.trim();
   });
  
@@ -227,9 +232,9 @@ function byPrescriptionInfo(order: OrderBasketItem, prescribedMedsObs: Array<Obs
   const compoundedDrug = [];
   
   const mapppedObs: Array<string> = prescribedMedsObs.map((ob) => {
-    
     let  [drugName] = ob.display.match(/(?<=\().+?(?=\))/g).slice(-1);
     let drugDosage = ob.display.toLowerCase().match(/(([0-9]*[.])?[0-9]+mg)/g);
+    
     const frequency = ob.groupMembers.filter(member => member.concept.display === 'MEDICATION FREQUENCY')[0];
     
     // if it is a compound drug
@@ -238,11 +243,18 @@ function byPrescriptionInfo(order: OrderBasketItem, prescribedMedsObs: Array<Obs
       compoundedDrug.push((drugNameSplit[1].trim() + '/' + drugDosage[1] + '/' + frequency.value.display).toLowerCase())
       drugName = drugNameSplit[0];
     }
+
+    if(drugName.match(/\s+\/\s+/)) {
+      const drugNameSplit = drugName.split(" / ");
+      compoundedDrug.push((drugNameSplit[1].trim() + '/' + drugDosage[1] + '/' + frequency.value.display).toLowerCase())
+      drugName = drugNameSplit[0];
+    }
     
     return (drugName.trim() + '/' + drugDosage[0] + '/' + frequency.value.display).toLowerCase();
 
   });
-  console.log("order.commonMedicationName", order.commonMedicationName)
+
+  console.log(mapppedObs.concat(compoundedDrug), (order.commonMedicationName + '/' + order.dosage.dosage + '/' + order.frequency.name).toLowerCase());
   return mapppedObs.concat(compoundedDrug).includes((order.commonMedicationName + '/' + order.dosage.dosage + '/' + order.frequency.name).toLowerCase());
 }
 

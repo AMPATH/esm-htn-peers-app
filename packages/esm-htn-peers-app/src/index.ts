@@ -8,7 +8,7 @@ import {
 import { createFormDashboardLink } from './createFormDashboardLink';
 import { formDashboardMeta, peersDashboardMeta } from './dashboard.meta';
 import { config } from './config';
-import { createDashboardLink } from '@openmrs/esm-patient-common-lib';
+import { createDashboardLink } from '../../esm-patient-common-lib';
 
 const importTranslation = require.context('../translations', false, /.json$/, 'lazy');
 
@@ -41,7 +41,7 @@ function setupOpenMRS() {
         }),
         online: true,
         offline: false,
-      },
+      }
     ],
     extensions: [
       {

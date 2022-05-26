@@ -1,0 +1,14 @@
+{
+  "searchForPatient": "Search for a patient by name or identifier number",
+  "search": "Search",
+  "patientsFound_one": "",
+  "patientsFound_many": "",
+  "patientsFound_other": "",
+  "noResultsFound": "No results found",
+  "noPatientChartsFoundMessage": "Sorry, no patient charts have been found",
+  "trySearchWithPatientUniqueID": "Try searching with the patient's unique ID number",
+  "orPatientName": "OR the patient's name(s)",
+  "errorText": "An error occurred while performing search",
+  "error": "Error",
+  "errorCopy": "Sorry, there was a an error. You can try to reload this page, or contact the site administrator and quote the error code above."
+}

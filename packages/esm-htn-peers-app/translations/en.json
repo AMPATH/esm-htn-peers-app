@@ -1,10 +1,11 @@
 {
-  "actions": "Actions",
-  "activeVisit": "Active Visit",
-  "address": "Address",
-  "contactDetails": "Contact Details",
-  "relationships": "Relationships",
-  "showAllDetails": "Show all details",
-  "showLess": "Show less",
-  "started": "Started"
+  "duePeerPatients": "Peer patients due for delivery within the next 7 days",
+  "noDuePeerPatients": "You have no peer patients who are due for delivery for the next week.",
+  "noPatientsFound": "No patients found",
+  "noPeerPatients": "You have not been assigned any peer patients.",
+  "patientName": "Name",
+  "peerPatients": "Peer Patients",
+  "phone": "Phone",
+  "rtcDate": "Next Visit Date",
+  "showFake": "Show Test Patients"
 }

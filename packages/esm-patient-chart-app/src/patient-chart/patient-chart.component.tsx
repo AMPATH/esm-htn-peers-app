@@ -5,7 +5,7 @@ import {
   useAutoCreatedOfflineVisit,
   usePatientOrOfflineRegisteredPatient,
   useWorkspaceWindowSize,
-} from '@openmrs/esm-patient-common-lib';
+} from '../../../esm-patient-common-lib';
 import { RouteComponentProps } from 'react-router-dom';
 import ChartReview from '../patient-chart/chart-review/chart-review.component';
 import ActionMenu from './action-menu/action-menu.component';

@@ -1,11 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
-import { useConnectivity, usePatient, useVisit } from '@openmrs/esm-framework';
+import { useConnectivity, usePatient } from '@openmrs/esm-framework';
 import {
   launchPatientWorkspace,
   launchStartVisitPrompt,
   useVisitOrOfflineVisit,
-} from '@openmrs/esm-patient-common-lib';
+} from '../../esm-patient-common-lib';
 
 import { DashboardLinkConfig } from './types';
 
