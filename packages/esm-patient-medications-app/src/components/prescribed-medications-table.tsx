@@ -16,7 +16,7 @@ import {
   TableRow
 } from 'carbon-components-react';
 import Add16 from '@carbon/icons-react/es/add/16';
-import { EmptyState, CardHeader, launchPatientWorkspace } from '@openmrs/esm-patient-common-lib';
+import { EmptyState, CardHeader, launchPatientWorkspace } from '../../../esm-patient-common-lib';
 import { createErrorHandler, formatDate, useConfig } from '@openmrs/esm-framework';
 import { connect, Provider } from 'unistore/react';
 
@@ -64,7 +64,6 @@ const PrescribedMedicationsTable = connect<
         const encounterData = extractEncounterMedData(encounter.obs);
         const medObs = encounterData['TREATMENT STARTED, DETAILED'];
         const commonMeds = mapCommonMedsWithEncounter(pickDrugNamesFromObs(medObs));
-        console.log(pickDrugNamesFromObs(medObs));
         mimicSearchMedications(commonMeds, encounter.uuid, abortController, daysDurationUnit).then((data) => {
           const orders = data.map((order: Array<any>) => {
             return order.filter((o) => byPrescriptionInfo(o, medObs))[0];
@@ -254,7 +253,6 @@ function byPrescriptionInfo(order: OrderBasketItem, prescribedMedsObs: Array<Obs
 
   });
 
-  console.log(mapppedObs.concat(compoundedDrug), (order.commonMedicationName + '/' + order.dosage.dosage + '/' + order.frequency.name).toLowerCase());
   return mapppedObs.concat(compoundedDrug).includes((order.commonMedicationName + '/' + order.dosage.dosage + '/' + order.frequency.name).toLowerCase());
 }
 
