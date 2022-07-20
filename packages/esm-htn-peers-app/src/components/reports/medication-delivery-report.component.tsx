@@ -63,7 +63,7 @@ const MedicationDeliveryReport: React.FC<{}> = ({ }) => {
       <>
         <div className={styles.container}>
           <div className={styles.detailHeaderContainer}>
-            <h4 className={styles.productiveHeading02}>{t('medicationCosumption', 'Medication Delivery Report')} </h4>
+            <h4 className={styles.productiveHeading02}>{t('medicationDelivery', 'Medication Delivery Report')} </h4>
           </div>
           <DeliveryReportDataTable data={patientObs} />
         </div>

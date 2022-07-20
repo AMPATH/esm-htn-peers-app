@@ -99,7 +99,7 @@ const MissedMedicationReport: React.FC<{}> = ({ }) => {
       <>
         <div className={styles.container}>
           <div className={styles.detailHeaderContainer}>
-            <h4 className={styles.productiveHeading02}>{t('medicationCosumption', 'Missed Medication Report')} </h4>
+            <h4 className={styles.productiveHeading02}>{t('missedMedication', 'Missed Medication Report')} </h4>
           </div>
           <ExportToExcel apiData={downloadableData} fileName={'Missed_Medication_Data'} />
           <MissedMedicationDataTable data={medDoseObs} />

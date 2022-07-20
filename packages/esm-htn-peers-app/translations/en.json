@@ -1,8 +1,6 @@
 {
-  "adherent": "",
   "dateOrdered": "Date Ordered",
   "deliveryStatus": "Delivery Status",
-  "doDeliveries": "",
   "duePeerPatients": "Peer patients due for delivery within the next 7 days",
   "duration": "Duration",
   "durationUnits": "Duration Units",
@@ -16,7 +14,6 @@
   "missedDoseReason": "Reason Missed Dose",
   "noDeliveryInfo": "We do not have missed mdeciation information as at now.",
   "noDuePeerPatients": "You have no peer patients who are due for delivery for the next week.",
-  "nonAdherent": "",
   "noPatientsFound": "No patients found",
   "noPeerPatients": "You have not been assigned any peer patients.",
   "noRecordsFound": "No medications found",
@@ -32,6 +29,5 @@
   "showFake": "Show Test Patients",
   "totalDelivered": "Total Pills Delivered",
   "totalDispensed": "Total Dispensed",
-  "totalRemaining": "Total Pills Remaining",
-  "yesDeliveries": ""
+  "totalRemaining": "Total Pills Remaining"
 }

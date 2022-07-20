@@ -5,7 +5,7 @@ import {
   Tile
 } from 'carbon-components-react';
 import { useTranslation } from 'react-i18next';
-import { useLayoutType, useSession } from '@openmrs/esm-framework';
+import { useLayoutType } from '@openmrs/esm-framework';
 import _ from "lodash";
 
 import { EmptyIllustration } from '../../ui-components/empty-illustration.component';
