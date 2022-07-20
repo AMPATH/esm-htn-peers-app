@@ -20,10 +20,10 @@ const AdherenceReportDataTable: React.FC<AdherenceReportDataTableProps> = ({ dat
 
     <div className={styles.tabs}>
         <Tabs type="container">
-          <Tab id="adherence-tab" label={t('adherent', `Adherent (${tabAdherent.length})`)}>
+          <Tab id="adherence-tab" label={`Adherent (${tabAdherent.length})`}>
             <AdherenceTab data={tabAdherent}/>
           </Tab>
-          <Tab id="non-adherent-tab" label={t('nonAdherent', `Non-Adherent (${tabNonAdherent.length})`)}>
+          <Tab id="non-adherent-tab" label={`Non-Adherent (${tabNonAdherent.length})`}>
             <AdherenceTab data={tabNonAdherent}/>
           </Tab>
         </Tabs>

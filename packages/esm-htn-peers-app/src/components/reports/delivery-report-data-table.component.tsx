@@ -37,10 +37,10 @@ const DeliveryReportDataTable: React.FC<DeliverReportDataTableProps> = ({ data }
 
     <div className={styles.tabs}>
         <Tabs type="container">
-          <Tab id="no-deliveries-tab" label={t('doDeliveries', `Failed Deliveries (${tabNo.patientCount})`)}>
+          <Tab id="no-deliveries-tab" label={`Failed Deliveries (${tabNo.patientCount})`}>
             <DeliveryTab data={tabNo.items}/>
           </Tab>
-          <Tab id="yes-deliveries-tab" label={t('yesDeliveries', `Successful Deliveries (${tabYes.patientCount})`)}>
+          <Tab id="yes-deliveries-tab" label={`Successful Deliveries (${tabYes.patientCount})`}>
             <DeliveryTab data={tabYes.items}/>
           </Tab>
         </Tabs>
