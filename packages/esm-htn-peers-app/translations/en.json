@@ -12,6 +12,7 @@
   "medicationCosumption": "Missed Medication Report",
   "medicationDelivery": "Missed Medications",
   "missedDoseReason": "Reason Missed Dose",
+  "missedMedication": "Missed Medication Report",
   "noDeliveryInfo": "We do not have missed mdeciation information as at now.",
   "noDuePeerPatients": "You have no peer patients who are due for delivery for the next week.",
   "noPatientsFound": "No patients found",

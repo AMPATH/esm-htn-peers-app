@@ -81,13 +81,13 @@ const MedicationConsumptionReport: React.FC<{}> = ({ }) => {
       <>
         <div className={styles.container}>
           <div className={styles.detailHeaderContainer}>
-            <h4 className={styles.productiveHeading02}>{t('medicationCosumption', 'Medication Consumption Report')} </h4>
+            <h4 className={styles.productiveHeading02}>{`Medication Consumption Report`} </h4>
           </div>
           <MedicationDataTable data={orderedMeds} medInfo={medicationData} />
         </div>
         <div className={styles.container}>
           <div className={styles.detailHeaderContainer}>
-            <h4 className={styles.productiveHeading02}>{t('medicationAdherence', 'Medication Adherence Report')} </h4>
+            <h4 className={styles.productiveHeading02}>{`Medication Adherence Report`} </h4>
           </div>
           <AdherenceReportDataTable data={adheredMeds} />
         </div>
