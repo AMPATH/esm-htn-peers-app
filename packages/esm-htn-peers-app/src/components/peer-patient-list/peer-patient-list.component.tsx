@@ -20,6 +20,7 @@ import {
 } from 'carbon-components-react';
 import { useTranslation } from 'react-i18next';
 import { ConfigurableLink, formatDate, OpenmrsResource, useLayoutType, usePagination } from '@openmrs/esm-framework';
+import { isEmpty } from "lodash"
 
 import { useRelationships } from './relationships.resource';
 import { EmptyIllustration } from '../../ui-components/empty-illustration.component';
@@ -28,6 +29,7 @@ import { mapPatienInfo, mergePatienInfo } from '../../services/patient.service';
 import PatientInfoSummary from './patient-info-summary';
 import { getPatientEncounter, getPatientInfo } from '../../api/patient-resource';
 import DuePeerPatientList from './due-patient-list.component';
+import { getPatientInfoCache, setPatientInfoCache } from '../../services/patient-info-cache.service';
 
 interface PeerPatientListProps {
   user: OpenmrsResource;
@@ -48,25 +50,28 @@ const PeerPatientList: React.FC<PeerPatientListProps> = ({ user }) => {
   useMemo(() => {
     const abortController = new AbortController();
 
-    if (relationships && !patientData) {
-      const patientUuids = [];
-      relationships.forEach((patient) => {
-        patientUuids.push(patient.relativeUuid);
-      });
+    const cachedPatientInfo = getPatientInfoCache();
+    
+    if (relationships && !patientData && isEmpty(cachedPatientInfo.data)) {
 
+      const patientUuids = [];
+      
+      relationships.forEach((patient) => {
+          patientUuids.push(patient.relativeUuid);
+      });
+      
       const patientInfoRequest = getPatientInfo(patientUuids, abortController);
       const patientEncounterRequest = getPatientEncounter(patientUuids, 'PT4APEER', abortController);
 
-      Promise.all(patientInfoRequest)
-        .then((patientInfo) => {
+      Promise.all(patientInfoRequest).then((patientInfo) => {
           const mappedInfo = mapPatienInfo(patientInfo);
           setPatientData(mappedInfo);
           return mappedInfo;
-        })
-        .then((mappedInfo) => {
+        }).then((mappedInfo) => {
           // not the best way to handle this but can suffice for now
           Promise.all(patientEncounterRequest).then((peerEncounter) => {
             const mergedInfo = mergePatienInfo(mappedInfo, peerEncounter);
+            setPatientInfoCache(user?.person?.uuid, mergedInfo);
             setDueDeliveries(
               mergedInfo.filter((patient) => {
                 const dateInfo = patient.encounter ? patient.encounter.return_visit_date[0] : null;
@@ -76,6 +81,13 @@ const PeerPatientList: React.FC<PeerPatientListProps> = ({ user }) => {
             setPatientData(mergedInfo);
           });
         });
+    } else {
+      
+      if(!patientData) {
+        const cachedData = cachedPatientInfo.data[user?.person?.uuid]?.patientInfo;
+        setPatientData(cachedData);
+      }
+      
     }
   }, [relationships, patientData]);
 

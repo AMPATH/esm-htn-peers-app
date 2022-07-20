@@ -5,7 +5,11 @@
     "packages/*"
   ],
   "scripts": {
-    "start": "openmrs develop --sources packages/esm-patient-medications-app  packages/esm-patient-registration-app  packages/esm-patient-search-app  packages/esm-patient-chart-app  packages/esm-htn-peers-app --port=8050 --importmap=https://poc-test-builds.fra1.cdn.digitaloceanspaces.com/@htn-peers/importmap/importmap.json --backend=https://ngx.ampath.or.ke/ --api-url=/amrs/ --config-url=https://poc-test-builds.fra1.cdn.digitaloceanspaces.com/@htn-peers/config/config.json",
+    "patient:medications": "openmrs develop --sources packages/esm-patient-medications-app --port=8050 --importmap=https://poc-test-builds.fra1.cdn.digitaloceanspaces.com/@htn-peers/importmap/importmap.json --backend=https://ngx.ampath.or.ke/ --api-url=/amrs/ --config-url=https://poc-test-builds.fra1.cdn.digitaloceanspaces.com/@htn-peers/config/config.json",
+    "patient:registration": "openmrs develop --sources packages/esm-patient-registration-app --port=8050 --importmap=https://poc-test-builds.fra1.cdn.digitaloceanspaces.com/@htn-peers/importmap/importmap.json --backend=https://ngx.ampath.or.ke/ --api-url=/amrs/ --config-url=https://poc-test-builds.fra1.cdn.digitaloceanspaces.com/@htn-peers/config/config.json",
+    "patient:search": "openmrs develop --sources packages/esm-patient-search-app --port=8050 --importmap=https://poc-test-builds.fra1.cdn.digitaloceanspaces.com/@htn-peers/importmap/importmap.json --backend=https://ngx.ampath.or.ke/ --api-url=/amrs/ --config-url=https://poc-test-builds.fra1.cdn.digitaloceanspaces.com/@htn-peers/config/config.json",
+    "patient:chart": "openmrs develop --sources  packages/esm-patient-chart-app --port=8050 --importmap=https://poc-test-builds.fra1.cdn.digitaloceanspaces.com/@htn-peers/importmap/importmap.json --backend=https://ngx.ampath.or.ke/ --api-url=/amrs/ --config-url=https://poc-test-builds.fra1.cdn.digitaloceanspaces.com/@htn-peers/config/config.json",
+    "peers": "openmrs develop --sources packages/esm-htn-peers-app --port=8050 --importmap=https://poc-test-builds.fra1.cdn.digitaloceanspaces.com/@htn-peers/importmap/importmap.json --backend=https://ngx.ampath.or.ke/ --api-url=/amrs/ --config-url=https://poc-test-builds.fra1.cdn.digitaloceanspaces.com/@htn-peers/config/config.json",
     "start-all": "openmrs develop --sources 'packages/esm-*-app/'",
     "ci:publish": "lerna publish from-package --yes",
     "ci:prepublish": "lerna publish from-package --no-git-reset --yes --dist-tag next",
@@ -48,6 +52,7 @@
     "eslint-config-prettier": "^8.2.0",
     "eslint-config-ts-react-important-stuff": "^3.0.0",
     "eslint-plugin-prettier": "^3.3.1",
+    "file-saver": "^2.0.5",
     "husky": "^6.0.0",
     "i18next": "^19.7.0",
     "i18next-parser": "^5.4.0",
@@ -71,7 +76,8 @@
     "turbo": "^1.1.10",
     "typescript": "^4.0.3",
     "webpack": "^5.36.2",
-    "webpack-cli": "^4.7.0"
+    "webpack-cli": "^4.7.0",
+    "xlsx": "^0.18.5"
   },
   "resolutions": {
     "**/@types/react": "^16.14.5"

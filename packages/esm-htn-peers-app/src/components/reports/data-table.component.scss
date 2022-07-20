@@ -1,0 +1,68 @@
+@import "~@openmrs/esm-styleguide/src/vars";
+@import "~carbon-components/src/globals/scss/vars";
+@import "~carbon-components/src/globals/scss/mixins";
+
+.label01 {
+    @include carbon--type-style("label-01");
+}
+
+.startDateColumn {
+    height: 100%;
+    display: flex;
+    flex-flow: column wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 0.25rem 0;
+  
+    span {
+      margin: 0rem;
+    }
+}
+
+.tabletSearchResultTile {
+    margin-top: 5px;
+    border-left: 2px solid var(--brand-03);
+  
+    &:not(:last-of-type) {
+      margin-bottom: 1rem;
+    }
+}
+
+.searchResultTile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+  
+.searchResultTileContent {
+    flex: 1 1 auto;
+}
+
+.container {
+  background-color: $ui-background;
+  border: 1px solid $grey-2;
+  padding: 1rem;
+  margin: 1rem 0rem 1rem;
+  width: 100%;
+}
+
+.tabs > :global(.bx--tab-content) {
+  padding: 0rem !important;
+}
+
+:global(.bx--tabs--scrollable .bx--tabs--scrollable__nav-link) {
+  width: auto;
+}
+
+.tabs {
+  padding-left: 1rem;
+}
+
+.header::after {
+  content: "";
+  display: block;
+  width: 2rem;
+  padding-top: 0.188rem;
+  border-bottom: 0.375rem solid var(--brand-03);
+}
+  

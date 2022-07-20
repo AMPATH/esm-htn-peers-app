@@ -12,7 +12,7 @@ interface PatientInfoProps {
 }
 
 const PatientInfoSummary: React.FC<PatientInfoProps> = ({ patientUuid }) => {
-  const { t } = useTranslation();
+
   const abortController = new AbortController();
   
   const [patientInfo, setPatientInfo] = useState(null);

@@ -3,6 +3,7 @@ import {
   getAsyncLifecycle,
   getSyncLifecycle,
   messageOmrsServiceWorker,
+  registerBreadcrumbs,
 } from '@openmrs/esm-framework';
 
 import { createFormDashboardLink } from './createFormDashboardLink';
@@ -31,6 +32,18 @@ function setupOpenMRS() {
 
   defineConfigSchema(moduleName, config);
 
+  registerBreadcrumbs([
+    {
+      path: `${window.spaBase}/app`,
+      title: 'Home'
+    },
+    {
+      path: `${window.spaBase}/htn-reports-dashboard`,
+      title: 'HTN Report Dashboard',
+      parent: `${window.spaBase}/app`,
+    }
+  ]);
+
   return {
     pages: [
       {
@@ -41,9 +54,22 @@ function setupOpenMRS() {
         }),
         online: true,
         offline: false,
-      }
+      },
+      {
+        load: getAsyncLifecycle(() => import('./components/reports/main-report-dashboard.component'), options),
+        route: /^htn-reports-dashboard/,
+        online: true,
+        offline: false
+      },
     ],
     extensions: [
+      {
+        id: 'show-report-dashboard-action',
+        slot: 'top-nav-actions-slot',
+        load: getAsyncLifecycle(() => import('./components/reports/add-dashboard-link'), options),
+        online: true,
+        offline: false,
+      },
       {
         id: 'peer-list',
         slot: 'patient-chart-htn-peers-dashboard-slot',

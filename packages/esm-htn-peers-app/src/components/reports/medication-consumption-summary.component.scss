@@ -1,0 +1,185 @@
+@import "~@openmrs/esm-styleguide/src/vars";
+@import "~carbon-components/src/globals/scss/vars";
+@import "~carbon-components/src/globals/scss/mixins";
+@import "../../root.scss";
+
+.heading {
+  @include carbon--type-style("productive-heading-01");
+  color: $text-02;
+}
+
+.row {
+  @include carbon--type-style("body-short-01");
+  display: flex;
+
+  &:first-child {
+    border-bottom: 1px solid $ui-03;
+  }
+}
+
+.row > .col {
+  flex: 1;
+  padding: 1rem 1rem;
+
+  &:nth-of-type(2n + 1) {
+    border-right: 1px solid $ui-03;
+  }
+}
+
+.row li {
+  margin: 0.5rem 0;
+}
+
+.relationship {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.relationship div {
+  flex: 1 1;
+}
+
+.container {
+  background-color: $ui-background;
+  border: 1px solid #e0e0e0;
+  width: 100%;
+  margin: 20px auto;
+  max-width: 95vw;
+}
+
+.detailHeaderContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-04 0 $spacing-04 $spacing-05;
+  background-color: $ui-background;
+}
+
+.productiveHeading02::after {
+  content: "";
+  display: block;
+  width: 2rem;
+  padding-top: 0.188rem;
+  border-bottom: 0.375rem solid #007d79;
+}
+
+.tableContainer section{
+  position: relative;
+}
+
+.tableContainer a {
+  text-decoration: none;
+}
+
+.pagination {
+  overflow: hidden;
+}
+
+.emptyRow {
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.peerPatientsTable tr[data-parent-row]:nth-child(odd) td {
+  background-color: #ffffff;
+}
+
+.peerPatientsTable  tbody  tr[data-parent-row]:nth-child(even)  td {
+  background-color: #f4f4f4;
+}
+
+.peerSummaryContainer {
+  width: 100%;
+  max-width: 768px;
+  margin: 1rem auto;
+}
+
+.expandedActiveVisitRow > td > div {
+  max-height: max-content !important;
+}
+
+.expandedActiveVisitRow td {
+  padding: 0 2rem;
+}
+
+.expandedActiveVisitRow th[colspan] td[colspan] > div:first-child {
+  padding: 0 1rem;
+}
+
+.action {
+  margin-bottom: $spacing-03;
+}
+
+.content {
+  @include carbon--type-style("productive-heading-01");
+  color: $text-02;
+  margin-top: $spacing-05;
+  margin-bottom: $spacing-03;
+}
+
+.desktopHeading {
+  h4 {
+    @include carbon--type-style('productive-heading-02');
+    color: $text-02;
+  }
+}
+
+.tabletHeading {
+  h4 {
+    @include carbon--type-style('productive-heading-03');
+    color: $text-02;
+  }
+}
+
+.desktopHeading, .tabletHeading {
+  text-align: left;
+  text-transform: capitalize;
+  margin-bottom: $spacing-05;
+  
+  h4:after {
+    content: "";
+    display: block;
+    width: 2rem;
+    padding-top: 0.188rem;
+    border-bottom: 0.375rem solid $brand-teal-01;
+  }
+}
+
+.heading:after {
+  content: "";
+  display: block;
+  width: 2rem;
+  padding-top: 0.188rem;
+  border-bottom: 0.375rem solid $brand-teal-01;
+}
+
+.tile {
+  text-align: center;
+  border: 1px solid $ui-03;
+}
+
+:global(.bx--grid) {
+  padding-bottom: 0.5rem;
+}
+
+:global(.bx--parent-row.fake) {
+  display: none;
+}
+
+:global(.bx--toggle-input__label) {
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+:global(.bx--toggle-input__label .bx--toggle__switch) {
+  margin-left: 1rem;
+  margin-top: 0;
+}
+
+:global(.bx--table-toolbar) {
+  padding: 0.25rem 0 0.25rem 1rem;
+}
+
+

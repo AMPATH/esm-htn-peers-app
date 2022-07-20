@@ -36,6 +36,52 @@ export function getPatientEncounter(patientUuids: Array<string>, encounterType: 
   return encounters;  
 }
 
+export function getPatientMedicationUsage(patientUuids: Array<string>, conceptUuid: string, abortController: AbortController) {
+
+  const customRepresentation = 'custom:(person:ref,encounter:ref,groupMembers:(uuid,concept:(uuid,display),obsDatetime,value:(display)))';
+
+  const requests = [];
+  
+  patientUuids.forEach(patientUuid => {
+    requests.push(openmrsFetch(`/ws/rest/v1/obs?patient=${patientUuid}&concept=${conceptUuid}&v=${customRepresentation}`, {
+        signal: abortController.signal,
+    }));
+  });
+  
+  return requests;  
+}
+
+export function getPatientObsByConcept(patientUuids: Array<string>, conceptUuid: string, abortController: AbortController, v?: string) {
+
+  const customRepresentation = v ? v : 'custom:(person:ref,encounter:(encounterDatetime,encounterType:(name)),value:ref)';
+
+  const requests = [];
+  
+  patientUuids.forEach(patientUuid => {
+    requests.push(openmrsFetch(`/ws/rest/v1/obs?patient=${patientUuid}&concept=${conceptUuid}&v=${customRepresentation}`, {
+        signal: abortController.signal,
+    }));
+  });
+  
+  return requests;  
+}
+
+export function getPatientOrders(patientUuids: Array<string>, abortController: AbortController) {
+
+  const customRepresentation = 'custom:(orderNumber,patient:ref,action,dateActivated,autoExpireDate,encounter:ref,orderer:(uuid,display,person:(display)),'+
+  'drug:(uuid,strength,dosageForm:(display,uuid),concept:ref),dose,doseUnits:ref,frequency:ref,quantity,quantityUnits:ref,duration,durationUnits:ref)';
+
+  const requests = [];
+  
+  patientUuids.forEach(patientUuid => {
+    requests.push(openmrsFetch(`/ws/rest/v1/order?patient=${patientUuid}&orderType=53eb466e-1359-11df-a1f1-0026b9348838&careSetting=${careSettingUuid}&status=ACTIVE&v=${customRepresentation}`, {
+      signal: abortController.signal,
+    }));
+  });
+  
+  return requests;  
+}
+
 export function getPeers(abortController: AbortController) {
   const customRepresentation = 'custom:(uuid,display,person:(uuid))';
 
