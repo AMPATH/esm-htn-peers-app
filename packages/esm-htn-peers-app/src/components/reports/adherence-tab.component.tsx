@@ -30,7 +30,7 @@ const AdherenceTab: React.FC<AdherenceTabProps> = ({ data }) => {
     () => [
       {
         id: 0,
-        header: t('medication', 'Medication'),
+        header: t('medicationRequested', 'Medication'),
         key: 'medication',
       },
       {

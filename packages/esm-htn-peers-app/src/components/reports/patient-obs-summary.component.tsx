@@ -25,11 +25,6 @@ const PatientObsSummary: React.FC<PatientObsSummaryProps> = ({ obs }) => {
         key: 'patientName',
       },
       {
-        id: 1,
-        header: t('encounterType', 'Encounter Type'),
-        key: 'encounterType',
-      },
-      {
         id: 2,
         header: t('encounterDate', 'Date of Encounter'),
         key: 'encounterDate',

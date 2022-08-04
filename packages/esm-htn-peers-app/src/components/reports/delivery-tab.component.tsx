@@ -19,15 +19,15 @@ const DeliveryTab: React.FC<DeliveryTabProps> = ({ data }) => {
   const [dData, SetdData] = useState([]);
 
   useMemo(() => {
-    SetdData(_.orderBy(data, ['encounterDate'], ['desc']));
+    SetdData(_.orderBy(data, ['peer'], ['asc']));
   }, [data]);
   
   const headerData = useMemo(
     () => [
       {
         id: 0,
-        header: t('encounterDate', 'Encounter Date'),
-        key: 'encounterDate',
+        header: t('peer', 'Peer Name'),
+        key: 'peer',
       },
       {
         id: 2,

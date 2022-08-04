@@ -86,9 +86,9 @@ const MedicationDeliveryReport: React.FC<{}> = ({ }) => {
 
 function ObsTable(obs) { 
   const data =  _.groupBy(setPatientObsTable(obs), 'deliveryStatus');
-  return _.mapValues(data, (o, key) => {
+  return _.mapValues(data, (o, key) => { 
     return {
-      items: mapItems(_.groupBy(o, 'encounterDate')),
+      items: mapItems(_.groupBy(o, 'peer')),
       patientCount: o.length,
       id: `TAB-${key}`
     }
@@ -100,8 +100,12 @@ function mapItems(items) {
   return _.values(_.mapValues(items, (o,key) => {
     return {
       id: `${key}`,
-      encounterDate: key, 
-      items: o,
+      peer: key, 
+      items: o.map((i, k) => { 
+        i.id = `${k}`; 
+        i.patientName = `${i.patientAmrsId} - ${_.startCase(_.toLower(i.patientNameClean))}`; 
+        return i;
+      }),
       patientCount: o.length
     };
   }));

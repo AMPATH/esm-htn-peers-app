@@ -1,5 +1,6 @@
 import { camelCase, filter, find, first, flatMapDeep, get, isEqual,
     groupBy, keyBy, map, mapValues, merge, sumBy, trim, uniqWith, values } from "lodash";
+import { useMemo } from "react";
 
 
 export function generateStatsData(currMeds, medsOrdered) {
@@ -19,7 +20,8 @@ export function setCurrentMedsTable(currMeds: Array<any>): any {
         return {
             patientName: item.person.display,
             patientUuid: item.person.uuid,
-            encounterDate: get(find(item.groupMembers, t => t.concept.uuid == '61807185-2a44-4488-aa1a-c884b82a029b'), 'obsDatetime').split("T")[0],
+            peer: get(first(item.encounter.encounterProviders), 'display').split(":")[0],
+            encounterDate: get(first(item.groupMembers), 'obsDatetime').split("T")[0],
             medication: trim(get(find(item.groupMembers, t => t.concept.uuid == '61807185-2a44-4488-aa1a-c884b82a029b'), 'value.display')),
             adherence: pillCount > 0 ? 'Non-Adherent' : 'Adherent',
             pillCount: pillCount,
@@ -39,6 +41,8 @@ export function setOrderedMedsTable(medsOrdered: Array<any>) : Array<any> {
     return medsOrderInfo.map((item, key) => {
         return {
             patientName: item.patient.display,
+            patientNameClean: item.patient.display.split(" - ")[1],
+            patientAmrsId: item.patient.display.split(" - ")[0],
             patientUuid: item.patient.uuid,
             medication: trim(item.drug.concept.display),
             dosageForm: item.drug.dosageForm.display,
@@ -47,6 +51,7 @@ export function setOrderedMedsTable(medsOrdered: Array<any>) : Array<any> {
             durationUnits: item.durationUnits.display,
             quantityDispensed: item.quantity,
             frequency: item.frequency.display,
+            peer: get(item.orderer, 'display').split(" - ")[1],
             dateOrdered: item.dateActivated.split("T")[0]
         }
     });
@@ -61,7 +66,10 @@ export function setPatientObsTable(obs: Array<any>) : Array<any> {
             id: `${key}`,
             patientName: item.person.display,
             patientUuid: item.person.uuid,
+            patientNameClean: item.person.display.split(" - ")[1],
+            patientAmrsId: item.person.display.split(" - ")[0],
             deliveryStatus: item.value.display,
+            peer: get(first(item.encounter.encounterProviders), 'display').split(":")[0],
             encounterType: item.encounter.encounterType.name,
             encounterDate: item.encounter.encounterDatetime.split("T")[0]
         }

@@ -15,6 +15,8 @@ import { getPatientMedicationUsage, getPatientOrders } from '../../api/patient-r
 import { setCurrentMedsTable, setOrderedMedsTable } from './utils.data-table';
 import MedicationDataTable from './medication-data-table.component';
 import AdherenceReportDataTable from './medication-adherence-table.component';
+import { ExportToExcel } from './export-button.component';
+import { generateDownloadableRefillRequest } from './utils.downloads';
 
 const MedicationConsumptionReport: React.FC<{}> = ({ }) => {
 
@@ -28,6 +30,7 @@ const MedicationConsumptionReport: React.FC<{}> = ({ }) => {
     const [orderedMeds, SetOrderedMeds] = useState(null);
     const [adheredMeds, SetAdheredMeds] = useState(null);
     const [isLoading, SetisLoading] = useState(false);
+    const [downloadableMedData, SetDownloadableMedData] = useState(null);
     
 
   useMemo(() => {
@@ -67,6 +70,8 @@ const MedicationConsumptionReport: React.FC<{}> = ({ }) => {
             SetOrderedMeds(_.orderBy(MedsTable(_.uniqWith(setOrderedMedsTable(cachedOrderInfo), _.isEqual)), ['patientCount'], ['desc']));
         if(!adheredMeds)
             SetAdheredMeds(setCurrentMedsTable(cachedMedInfo));    
+        if(!downloadableMedData && orderedMeds?.length)
+            SetDownloadableMedData(generateDownloadableRefillRequest(orderedMeds));
     }
     
   }, [medicationData, orderedMeds]);
@@ -76,18 +81,19 @@ const MedicationConsumptionReport: React.FC<{}> = ({ }) => {
   }
 
   if (orderedMeds?.length) {
-
+    // console.table(generateDownloadableRefillRequest(orderedMeds));
     return (
       <>
         <div className={styles.container}>
           <div className={styles.detailHeaderContainer}>
-            <h4 className={styles.productiveHeading02}>{`Medication Consumption Report`} </h4>
+            <h4 className={styles.productiveHeading02}>{`Medication Refill/Request Report`} </h4>
           </div>
+          <ExportToExcel apiData={downloadableMedData} fileName={`Pill_Count_Report_${new Date().toISOString().substring(0, 10)}`} />
           <MedicationDataTable data={orderedMeds} medInfo={medicationData} />
         </div>
         <div className={styles.container}>
           <div className={styles.detailHeaderContainer}>
-            <h4 className={styles.productiveHeading02}>{`Medication Adherence Report`} </h4>
+            <h4 className={styles.productiveHeading02}>{`Medication Pill Count Report`} </h4>
           </div>
           <AdherenceReportDataTable data={adheredMeds} />
         </div>
@@ -111,17 +117,37 @@ const MedicationConsumptionReport: React.FC<{}> = ({ }) => {
 
 function MedsTable(orderedMeds) {
   
-    const oMeds = _.groupBy(orderedMeds, 'medication');
-
+    const oMeds = _.groupBy(orderedMeds, 'peer');
+    
     return _.values(_.mapValues(oMeds, (o,key) => {
         return {
             id: `${key}`,
-            medication: _.trim(_.first(o).medication), 
-            totalDispensed: _.sumBy(o, 'quantityDispensed'),
-            items: o.map((i, k) => { i.id = `${k}`; return i;}),
-            patientCount: o.length
+            peer: _.trim(_.first(o).peer), 
+            totalDispensed: _.sumBy(_.uniqWith(o, _.isEqual), 'quantityDispensed'),
+            items: t(o),
+            patientCount: _.uniqBy(o, 'patientUuid').length
         };
     }));
+}
+
+function t(peerMeds) {
+  const oMeds = _.groupBy(peerMeds, 'medication');
+  return _.values(_.mapValues(oMeds, (o,key) => {
+
+    const meds = _.uniqWith(o, _.isEqual);
+
+    return {
+        id: key,
+        medication: key,
+        totalDispensed: _.sumBy(meds, 'quantityDispensed'),
+        items: _.uniqWith(o.map((i, k) => { 
+            i.id = `${k}`; 
+            i.patientName = `${i.patientAmrsId} - ${_.startCase(_.toLower(i.patientNameClean))}`; 
+            return i;
+          }), _.isEqual),
+        patientCount: _.uniqBy(o, 'patientUuid').length
+    };
+  }));
 }
 
 export default MedicationConsumptionReport;

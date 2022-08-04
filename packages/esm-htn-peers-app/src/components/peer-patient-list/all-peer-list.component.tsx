@@ -1,8 +1,9 @@
 /* eslint-disable prettier/prettier */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { DataTableSkeleton, Tile, Accordion, AccordionItem } from 'carbon-components-react';
 import { useTranslation } from 'react-i18next';
 import { OpenmrsResource, useLayoutType } from '@openmrs/esm-framework';
+import async from 'async';
 
 import { EmptyIllustration } from '../../ui-components/empty-illustration.component';
 import styles from './peer-patient-list.scss';
@@ -10,6 +11,7 @@ import PeerPatientList from './peer-patient-list.component';
 import { getPeers } from '../../api/patient-resource';
 import { first } from 'lodash';
 import { PEER_PROVIDER_IDS } from '../../peers';
+import { getRelationships, useRelationships } from './relationships.resource';
 
 const AllPeerPatientList: React.FC = () => {
   const { t } = useTranslation();
@@ -25,13 +27,34 @@ const AllPeerPatientList: React.FC = () => {
     // open the first accordion
     accordionItems[0] = true;
     setToggledItem(accordionItems);
+  
 
     const abortController = new AbortController();
 
     const peerRequest = getPeers(abortController);
     if (!peers) {
       Promise.all(peerRequest).then((peerInfo: Array<OpenmrsResource>) => {
-        const mappedPeers = peerInfo.map((peer) => first(peer?.data.results));
+        const mappedPeers: Array<OpenmrsResource> = peerInfo.map((peer) => first(peer?.data.results));
+        /* async.parallel([
+          (callback) => { 
+            getRelationships(mappedPeers[0].person?.uuid).then((data) => {
+              callback(null, data); 
+            });
+            
+          },
+          (callback) => { 
+            getRelationships(mappedPeers[1].person?.uuid).then((data) => {
+              callback(null, data); 
+            }); 
+          },
+          (callback) => { 
+            getRelationships(mappedPeers[2].person?.uuid).then((data) => {
+              callback(null, data); 
+            });
+          }
+        ], function(err, results) {
+            console.log("Peers Loading", err, results);
+        }); */
         setPeersLoading(false);
         setPeers(mappedPeers);
       });

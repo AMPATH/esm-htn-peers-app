@@ -8,8 +8,6 @@
   "encounterType": "Encounter Type",
   "frequency": "Frequency",
   "medication": "Missed Medication",
-  "medicationAdherence": "Medication Adherence Report",
-  "medicationCosumption": "Missed Medication Report",
   "medicationDelivery": "Missed Medications",
   "missedDoseReason": "Reason Missed Dose",
   "missedMedication": "Missed Medication Report",

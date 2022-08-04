@@ -38,7 +38,7 @@ export function getPatientEncounter(patientUuids: Array<string>, encounterType: 
 
 export function getPatientMedicationUsage(patientUuids: Array<string>, conceptUuid: string, abortController: AbortController) {
 
-  const customRepresentation = 'custom:(person:ref,encounter:ref,groupMembers:(uuid,concept:(uuid,display),obsDatetime,value:(display)))';
+  const customRepresentation = 'custom:(person:ref,encounter:(uuid,display,encounterProviders:ref),groupMembers:(uuid,concept:(uuid,display),obsDatetime,value:(display)))';
 
   const requests = [];
   
@@ -53,7 +53,7 @@ export function getPatientMedicationUsage(patientUuids: Array<string>, conceptUu
 
 export function getPatientObsByConcept(patientUuids: Array<string>, conceptUuid: string, abortController: AbortController, v?: string) {
 
-  const customRepresentation = v ? v : 'custom:(person:ref,encounter:(encounterDatetime,encounterType:(name)),value:ref)';
+  const customRepresentation = v ? v : 'custom:(person:ref,encounter:(encounterDatetime,encounterType:(name),encounterProviders:ref),value:ref)';
 
   const requests = [];
   

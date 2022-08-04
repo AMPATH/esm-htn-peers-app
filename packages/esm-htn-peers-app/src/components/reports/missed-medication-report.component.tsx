@@ -17,6 +17,7 @@ import { getPatientObsByConcept } from '../../api/patient-resource';
 import { setMissedMedsObsTable, setPatientObsTable } from './utils.data-table';
 import MissedMedicationDataTable from './missed-medication-table.component';
 import { ExportToExcel } from './export-button.component';
+import { generateDownloadableMissedMedsReport } from './utils.downloads';
 
 const MissedMedicationReport: React.FC<{}> = ({ }) => {
 
@@ -34,18 +35,6 @@ const MissedMedicationReport: React.FC<{}> = ({ }) => {
     const [isLoading, SetisLoading] = useState(true);
     const [downloadableData, SetDownloadableData] = useState([]);
 
-    const translateScale = (scale) => {
-      const scaleMap = {
-        'ONE': 1,
-        'TWO': 2,
-        'THREE': 3,
-        'FOUR': 4,
-        'FIVE': 5
-      };
-
-      return _.get(scaleMap, scale);
-    }
-
   useMemo(() => {
     const abortController = new AbortController();
     const cachedPatientUuids = fetchPatientUuids();
@@ -55,13 +44,9 @@ const MissedMedicationReport: React.FC<{}> = ({ }) => {
       SetisLoading(false);
       const medObsData = setMissedMedsObsTable(missedDoseReasons, missedMedications)
       SetMedDoseObs(medObsData);
-      SetDownloadableData(medObsData?.map((dose) => {
-        return {
-          missedDoseReason: dose.missedDoseReason, 
-          scale: translateScale(dose.scale),
-          nPatients: dose.patientCount
-        }
-      }));
+      if(medObsData?.length) {
+        SetDownloadableData(generateDownloadableMissedMedsReport(medObsData));
+      }
     }
     
     if(!medDoseObs) {

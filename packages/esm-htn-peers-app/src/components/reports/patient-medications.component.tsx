@@ -7,11 +7,10 @@ import { ConfigurableLink, formatDate, useLayoutType } from '@openmrs/esm-framew
 import styles from './patient-medications.component.scss'
 
 interface PatientMedicationProps {
-  encounterInfo: any,
   medicationData: Array<any>
 }
 
-const PatientMedicationSummary: React.FC<PatientMedicationProps> = ({ medicationData, encounterInfo }) => {
+const PatientMedicationSummary: React.FC<PatientMedicationProps> = ({ medicationData }) => {
   const { t } = useTranslation();
   const layout = useLayoutType();
     const desktopView = layout === 'desktop';

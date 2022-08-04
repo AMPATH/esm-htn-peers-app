@@ -1,45 +1,39 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DataTable, Table, TableBody, TableCell, TableContainer, TableExpandedRow, TableExpandHeader, TableExpandRow, TableHead, TableHeader, TableRow } from 'carbon-components-react';
-import { useLayoutType } from '@openmrs/esm-framework';
+import { DataTable, DataTableSkeleton, Table, TableBody, TableCell, TableContainer, TableExpandedRow, TableExpandHeader, TableExpandRow, TableHead, TableHeader, TableRow } from 'carbon-components-react';
+import { formatDate, useLayoutType } from '@openmrs/esm-framework';
 
 import styles from './data-table.component.scss';
-import MedicationDataTableDetail from './medication-data-table-detail.component';
+import PatientMedicationSummary from './patient-medications.component';
 
-interface MedicationDataTableProps {
+interface MedicationDataTableDetailProps {
   data: Array<{
     id: string,
     totalDispensed: number, 
     patientCount: number, 
     items: Array<any>, 
-    peer: string
-  }>,
-  medInfo: Array<any>
+    medication: string
+  }>
 }
 
-const MedicationDataTable: React.FC<MedicationDataTableProps> = ({ data, medInfo }) => {
+const MedicationDataTableDetail: React.FC<MedicationDataTableDetailProps> = ({ data }) => {
 
   const { t } = useTranslation();
   const layout = useLayoutType();
   const desktopView = layout === 'desktop';
   const isTablet = layout === 'tablet';
 
-  const [downloadableData, SetDownloadableData] = useState([]);
-
-  useEffect(() => {
-    SetDownloadableData(downloadableData);
-  }, [data]);
-  
+  console.log("data", data);
   const headerData = useMemo(
     () => [
       {
         id: 0,
-        header: t('peer', 'Peer'),
-        key: 'peer',
+        header: t('medicationRequested', 'Medication'),
+        key: 'medication',
       },
       {
         id: 2,
-        header: t('totalDispensed', 'Cumulative Total Requested'),
+        header: t('totalDispensed', 'Total Requested'),
         key: 'totalDispensed',
       },
       {
@@ -83,7 +77,7 @@ const MedicationDataTable: React.FC<MedicationDataTableProps> = ({ data, medInfo
                     style={{ paddingLeft: isTablet ? '4rem' : '3rem' }}
                     colSpan={headers.length + 2}
                   >
-                    <MedicationDataTableDetail data={data[index].items}  />
+                    <PatientMedicationSummary medicationData={data[index].items}  />
                   </TableExpandedRow>
                 ) : null}
               </React.Fragment>
@@ -104,4 +98,4 @@ const MedicationDataTable: React.FC<MedicationDataTableProps> = ({ data, medInfo
   );
 };
 
-export default MedicationDataTable;
+export default MedicationDataTableDetail;

@@ -25,6 +25,26 @@ export function useRelationships(patientUuid: string) {
   };
 }
 
+export function getRelationships(patientUuid: string) {
+  const { data, error, isValidating } = useSWR<{ data: RelationshipsResponse }, Error>(
+    patientUuid ? `/ws/rest/v1/relationship?v=${customRepresentation}&person=${patientUuid}` : null,
+    openmrsFetch,
+  );
+
+  const formattedRelationships = data?.data?.results?.length
+    ? extractRelationshipData(patientUuid, data.data.results)
+    : null;
+
+  return new Promise((resolve, reject) => {
+    resolve({
+      data: data ? formattedRelationships : null,
+      isError: error,
+      isLoading: !data && !error,
+      isValidating,
+    });
+  });
+}
+
 function extractRelationshipData(
   patientIdentifier: string,
   relationships: Array<Relationship>,

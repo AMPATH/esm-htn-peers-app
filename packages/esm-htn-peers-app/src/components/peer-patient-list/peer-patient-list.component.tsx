@@ -53,7 +53,7 @@ const PeerPatientList: React.FC<PeerPatientListProps> = ({ user }) => {
     const cachedPatientInfo = getPatientInfoCache();
     
     if (relationships && !patientData && isEmpty(cachedPatientInfo.data)) {
-
+      
       const patientUuids = [];
       
       relationships.forEach((patient) => {
