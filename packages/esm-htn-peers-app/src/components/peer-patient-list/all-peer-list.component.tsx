@@ -23,9 +23,9 @@ const AllPeerPatientList: React.FC = () => {
   const [toggledItem, setToggledItem] = useState<Array<boolean>>([]);
 
   useEffect(() => {
-    const accordionItems = Array.from({ length: PEER_PROVIDER_IDS.length }, (i) => (i = false));
+    const accordionItems = Array.from({ length: PEER_PROVIDER_IDS.length }, (i) => (i = true));
     // open the first accordion
-    accordionItems[0] = true;
+    // accordionItems[0] = true;
     setToggledItem(accordionItems);
   
 
