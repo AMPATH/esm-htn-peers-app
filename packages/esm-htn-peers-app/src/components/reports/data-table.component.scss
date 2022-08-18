@@ -65,4 +65,8 @@
   padding-top: 0.188rem;
   border-bottom: 0.375rem solid var(--brand-03);
 }
+
+:global(.bx--data-table tr.bx--parent-row td) > a {
+  text-decoration: none;
+}
   

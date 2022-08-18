@@ -123,7 +123,7 @@ function MedsTable(orderedMeds) {
         return {
             id: `${key}`,
             peer: _.trim(_.first(o).peer), 
-            totalDispensed: _.sumBy(_.uniqWith(o, _.isEqual), 'quantityDispensed'),
+            totalDispensed: '-',
             items: t(o),
             patientCount: _.uniqBy(o, 'patientUuid').length
         };

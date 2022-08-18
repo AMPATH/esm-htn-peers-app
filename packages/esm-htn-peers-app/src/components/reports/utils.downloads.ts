@@ -11,7 +11,7 @@ export function generateDownloadableRefillRequest(data) {
             _.each(item.items, (i, k) => {
 
                 if(parseInt(ikey)== 0 && parseInt(k) ==0) {
-                    sheet.push([row.id, row.totalDispensed, row.patientCount, item.medication, item.totalDispensed,item.patientCount, i.patientName, i.quantityDispensed, i.duration, i.durationUnits, i.dateOrdered, i.frequency]);
+                    sheet.push([row.id, null, row.patientCount, item.medication, item.totalDispensed,item.patientCount, i.patientName, i.quantityDispensed, i.duration, i.durationUnits, i.dateOrdered, i.frequency]);
                 } else if(parseInt(ikey) > 0 && parseInt(k) == 0) {
                     sheet.push([, , , item.medication, item.totalDispensed,item.patientCount, i.patientName, i.quantityDispensed, i.duration, i.durationUnits, i.dateOrdered, i.frequency]);
                 } else {
@@ -24,8 +24,7 @@ export function generateDownloadableRefillRequest(data) {
     const download = sheet.map((row) => {
         return {
             peer: row[0],
-            Cumulative_Pills_Requested:row[1],
-            No_Patients_Using:row[2],
+            No_Patients_Under_Peer:row[2],
             Medication:row[3],
             Medication_Total:row[4],
             Patients_on_this_Med:row[5],
@@ -45,15 +44,15 @@ export function generateDownloadableRefillRequest(data) {
 export function generateDownloadablePillCountReport(data) {
 
     let sheet = [];
-
+    
     const zero_pills: Array<any> = _.get(data, 'Adherent');
     const non_zero_pills: Array<any> = _.get(data, 'Non-Adherent');
 
-    const zeroPillCount = _.orderBy(mapMeds(_.groupBy(zero_pills.map((i, k) => { i.id = `${k}`; return i;}), 'medication')), ['totalRemaining'], ['desc']);
-    const nonZeroPillCount = _.orderBy(mapMeds(_.groupBy(non_zero_pills.map((i, k) => { i.id = `${k}`; return i;}), 'medication')), ['totalRemaining'], ['desc']);
-   
-    const empty_row = { medication: null, totalDelivered: null, totalRemaining: null, patientCount: null, 
-        patientName: null, pillsDelivered:null, pillCount: null, encounterDate:null};
+    const zeroPillCount = _.orderBy(mapMeds(_.groupBy(zero_pills.map((i, k) => { i.id = `${k}`; return i;}), 'patientUuid')), ['nEncounters'], ['desc']);
+    const nonZeroPillCount = _.orderBy(mapMeds(_.groupBy(non_zero_pills.map((i, k) => { i.id = `${k}`; return i;}), 'patientUuid')), ['nEncounters'], ['desc']);
+    
+    const empty_row = { patientName: null, nEncounters: null, 
+        medication: null, pillsDelivered:null, pillCount: null, encounterDate:null};
 
     let zero_pills_title = {...empty_row};
     zero_pills_title.medication =  `Participants with 0 pills remaining (${zero_pills.length})`;
@@ -147,11 +146,10 @@ function mapMeds(oMeds) {
     return _.values(_.mapValues(oMeds, (o: Array<any>,key) => {
         return {
             id: `${key}`,
-            medication: _.trim(_.first(o).medication),
-            totalDelivered: _.sumBy(o, 'pillsDelivered'),
-            totalRemaining: _.sumBy(o, 'pillCount'),
+            patientNameClean: _.startCase(_.toLower(_.trim(_.first(o).patientName).split(" - ")[1])),
             items: o,
-            patientCount: o.length
+            patientUuid: key,
+            nEncounters: o.length
         };
     }));
 }
@@ -166,22 +164,18 @@ function mapPillCount(data: Array<any>) {
             
             if(parseInt(ikey) == 0) {
                 sheet.push({
-                    medication: row.medication, 
-                    totalDelivered: row.totalDelivered, 
-                    totalRemaining: row.totalRemaining, 
-                    patientCount: row.patientCount, 
-                    patientName: item.patientName, 
+                    patientName: row.patientNameClean, 
+                    nEncounters: row.nEncounters,
+                    medication: item.medication,
                     pillsDelivered: item.pillsDelivered, 
                     pillCount: item.pillCount,
                     encounterDate: item.encounterDate
                 });
             } else {
                 sheet.push({
-                    medication: null, 
-                    totalDelivered: null, 
-                    totalRemaining: null, 
-                    patientCount: null, 
-                    patientName: item.patientName, 
+                    patientName: null, 
+                    nEncounters: null,
+                    medication: item.medication,
                     pillsDelivered: item.pillsDelivered, 
                     pillCount: item.pillCount,
                     encounterDate: item.encounterDate

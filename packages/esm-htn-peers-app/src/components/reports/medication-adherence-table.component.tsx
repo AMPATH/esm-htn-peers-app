@@ -7,6 +7,7 @@ import styles from './data-table.component.scss';
 import AdherenceTab from './adherence-tab.component';
 import { ExportToExcel } from './export-button.component';
 import { generateDownloadablePillCountReport } from './utils.downloads';
+import AdherenceTabByPatient from './adherence-tab-by-patient.component';
 
 interface AdherenceReportDataTableProps {
   data: any;
@@ -30,10 +31,10 @@ const AdherenceReportDataTable: React.FC<AdherenceReportDataTableProps> = ({ dat
         
         <Tabs type="container">
           <Tab id="adherence-tab" label={`0 Pills Remaining (${tabAdherent.length})`}>
-            <AdherenceTab data={tabAdherent}/>
+            <AdherenceTabByPatient data={tabAdherent}/>
           </Tab>
           <Tab id="non-adherent-tab" label={`>0 Pills Remaining (${tabNonAdherent.length})`}>
-            <AdherenceTab data={tabNonAdherent}/>
+            <AdherenceTabByPatient data={tabNonAdherent}/>
           </Tab>
           <ExportToExcel apiData={downloadablePillCountData} fileName={`Medication_Pill_Count_Data_${new Date().toISOString().substring(0, 10)}`} />
         </Tabs>

@@ -29,8 +29,8 @@ const PatientAdherenceList: React.FC<PatientAdherenceListProps> = ({ patientList
     () => [
       {
         id: 0,
-        header: t('patientName', 'Patient Name'),
-        key: 'patientName',
+        header: t('medicationName', 'Medication'),
+        key: 'medication',
       },
       {
         id: 1,
