@@ -30,7 +30,7 @@ export function setCurrentMedsTable(currMeds: Array<any>): any {
         }
     });
 
-    const oMeds = groupBy(uniqWith(cMeds, isEqual), 'adherence');
+    const oMeds = uniqWith(cMeds, isEqual);
     return oMeds;
 }
 

@@ -34,7 +34,12 @@ const AdherenceTabByPatient: React.FC<AdherenceTabByPatientProps> = ({ data }) =
         key: 'patientNameClean',
       },
       {
-        id: 3,
+        id: 1,
+        header: t('peer', 'Peer'),
+        key: 'peer',
+      },
+      {
+        id: 2,
         header: t('nEncounters', 'No. Enncounters'),
         key: 'nEncounters',
       }
@@ -103,13 +108,15 @@ const AdherenceTabByPatient: React.FC<AdherenceTabByPatientProps> = ({ data }) =
 };
 
 function mapMeds(oMeds) {
+  
     return values(mapValues(oMeds, (o: Array<any>,key) => {
         return {
             id: `${key}`,
             patientNameClean: _.startCase(_.toLower(trim(first(o).patientName).split(" - ")[1])),
+            peer: first(o).peer,
             items: o,
             patientUuid: key,
-            nEncounters: o.length
+            nEncounters: _.uniqBy(o, 'encounterDate').length
         };
     }));
 }

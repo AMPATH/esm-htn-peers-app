@@ -45,13 +45,13 @@ export function generateDownloadablePillCountReport(data) {
 
     let sheet = [];
     
-    const zero_pills: Array<any> = _.get(data, 'Adherent');
-    const non_zero_pills: Array<any> = _.get(data, 'Non-Adherent');
+    //const zero_pills: Array<any> = _.get(data, 'Adherent');
+    //const non_zero_pills: Array<any> = _.get(data, 'Non-Adherent');
 
-    const zeroPillCount = _.orderBy(mapMeds(_.groupBy(zero_pills.map((i, k) => { i.id = `${k}`; return i;}), 'patientUuid')), ['nEncounters'], ['desc']);
-    const nonZeroPillCount = _.orderBy(mapMeds(_.groupBy(non_zero_pills.map((i, k) => { i.id = `${k}`; return i;}), 'patientUuid')), ['nEncounters'], ['desc']);
+    const pillCount = _.orderBy(mapMeds(_.groupBy(data.map((i, k) => { i.id = `${k}`; return i;}), 'patientUuid')), ['nEncounters'], ['desc']);
+    //const nonZeroPillCount = _.orderBy(mapMeds(_.groupBy(non_zero_pills.map((i, k) => { i.id = `${k}`; return i;}), 'patientUuid')), ['nEncounters'], ['desc']);
     
-    const empty_row = { patientName: null, nEncounters: null, 
+    /*const empty_row = { patientName: null, nEncounters: null, 
         medication: null, pillsDelivered:null, pillCount: null, encounterDate:null};
 
     let zero_pills_title = {...empty_row};
@@ -68,9 +68,9 @@ export function generateDownloadablePillCountReport(data) {
 
     sheet.push(empty_row);
     sheet.push(non_zero_pills_title);
-    sheet.push(empty_row);
+    sheet.push(empty_row);*/
 
-    sheet = sheet.concat(mapPillCount(nonZeroPillCount));
+    sheet = sheet.concat(mapPillCount(pillCount));
 
     return sheet;
 }
@@ -148,6 +148,7 @@ function mapMeds(oMeds) {
             id: `${key}`,
             patientNameClean: _.startCase(_.toLower(_.trim(_.first(o).patientName).split(" - ")[1])),
             items: o,
+            peer: _.first(o).peer,
             patientUuid: key,
             nEncounters: o.length
         };
@@ -157,7 +158,7 @@ function mapMeds(oMeds) {
 function mapPillCount(data: Array<any>) {
     
     let sheet = [];
-
+    console.log("data", data)
     _.each(data, (row, key) => {
         
         _.each(row.items, (item, ikey) => {
@@ -165,6 +166,7 @@ function mapPillCount(data: Array<any>) {
             if(parseInt(ikey) == 0) {
                 sheet.push({
                     patientName: row.patientNameClean, 
+                    peer: row.peer, 
                     nEncounters: row.nEncounters,
                     medication: item.medication,
                     pillsDelivered: item.pillsDelivered, 
@@ -174,6 +176,7 @@ function mapPillCount(data: Array<any>) {
             } else {
                 sheet.push({
                     patientName: null, 
+                    peer: null,
                     nEncounters: null,
                     medication: item.medication,
                     pillsDelivered: item.pillsDelivered, 
