@@ -158,7 +158,6 @@ function mapMeds(oMeds) {
 function mapPillCount(data: Array<any>) {
     
     let sheet = [];
-    console.log("data", data)
     _.each(data, (row, key) => {
         
         _.each(row.items, (item, ikey) => {
