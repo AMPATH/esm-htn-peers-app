@@ -74,7 +74,7 @@ export function getPatientOrders(patientUuids: Array<string>, abortController: A
   const requests = [];
   
   patientUuids.forEach(patientUuid => {
-    requests.push(openmrsFetch(`/ws/rest/v1/order?patient=${patientUuid}&orderType=53eb466e-1359-11df-a1f1-0026b9348838&careSetting=${careSettingUuid}&status=ACTIVE&v=${customRepresentation}`, {
+    requests.push(openmrsFetch(`/ws/rest/v1/order?patient=${patientUuid}&orderType=53eb466e-1359-11df-a1f1-0026b9348838&careSetting=${careSettingUuid}&status=any&v=${customRepresentation}`, {
       signal: abortController.signal,
     }));
   });
