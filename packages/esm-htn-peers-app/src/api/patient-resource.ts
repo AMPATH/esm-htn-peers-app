@@ -3,7 +3,7 @@ import { PEER_PROVIDER_IDS } from '../peers';
 
 const careSettingUuid = '6f0c9a92-6f24-11e3-af88-005056821db0';
 
-export function getPatientOrder(patientUuid: string, abortController: AbortController, status: 'ACTIVE' | 'any') {
+export function getPatientOrder(patientUuid: string, abortController: AbortController, status: 'any') {
   const customRepresentation =
     'custom:(uuid,dosingType,orderNumber,accessionNumber,' +
     'patient:ref,action,careSetting:ref,previousOrder:ref,dateActivated,scheduledDate,dateStopped,autoExpireDate,' +
